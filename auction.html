@@ -55,28 +55,31 @@ strong{color:#fff;font-weight:650}
 .cv-top::after{display:none}
 @media (max-width:600px){.cv-top{display:none}}
 /* ---------- Pill nav ---------- */
-.pnav{position:fixed;top:22px;right:var(--pad);z-index:55;display:flex;align-items:center;justify-content:flex-end;min-width:112px;min-height:41px;gap:4px;background:var(--lilac);color:var(--night);border-radius:999px;padding:6px;box-shadow:0 14px 40px -14px rgba(0,0,0,.6)}
-.pn-av{flex:none;width:40px;height:40px;border-radius:50%;overflow:hidden;background:var(--violet);transition:width .5s cubic-bezier(.7,0,.2,1),margin .5s}
+.pnav{position:fixed;top:22px;right:var(--pad);z-index:55;height:52px;width:var(--w,112px);border-radius:999px;background:var(--lilac);color:var(--night);overflow:hidden;box-shadow:0 14px 40px -14px rgba(0,0,0,.6);transition:width .6s cubic-bezier(.65,0,.15,1)}
+.pn-open{position:absolute;top:6px;right:6px;display:flex;align-items:center;gap:2px;white-space:nowrap;opacity:0;transform:translateX(16px);pointer-events:none;transition:opacity .2s ease,transform .35s ease}
+.pnav.open .pn-open{opacity:1;transform:none;pointer-events:auto;transition:opacity .35s ease .18s,transform .55s cubic-bezier(.2,.8,.2,1) .12s}
+.pn-av{flex:none;width:40px;height:40px;border-radius:50%;overflow:hidden;background:var(--violet);margin-right:6px}
 .pn-av img{width:100%;height:100%;object-fit:cover;display:block}
-.pn-links{display:flex;align-items:center;gap:2px;overflow:hidden;max-width:760px;transition:max-width .6s cubic-bezier(.7,0,.2,1),opacity .35s}
-.pn-links a{padding:11px 16px;border-radius:999px;font-weight:600;font-size:15px;line-height:1;white-space:nowrap;color:var(--night);transition:background-color .25s,color .25s}
+.pn-links{display:flex;align-items:center;gap:2px}
+.pn-links a{padding:11px 16px;border-radius:999px;font-weight:600;font-size:15px;line-height:1;white-space:nowrap;color:var(--night);border:1.5px solid transparent;transition:background-color .25s,color .25s,border-color .25s}
 .pn-links a:hover{background:rgba(18,11,46,.08)}
-.pn-links .pn-cv{background:var(--sun)}
-.pn-links .pn-cv:hover{background:#FFD21F}
-.pn-links .pn-talk{background:var(--night);color:var(--lilac);margin-left:2px}
+.pn-links .pn-cv{border-color:rgba(18,11,46,.35)}
+.pn-links .pn-cv:hover{background:var(--night);border-color:var(--night);color:var(--lilac)}
+.pn-links .pn-talk{background:var(--night);color:var(--lilac);margin-left:4px}
 .pn-links .pn-talk:hover{background:var(--violet);color:#fff}
-.pn-menu{display:none;align-items:center;gap:12px;border:0;background:var(--lilac);color:var(--night);font:600 15px/1 var(--body);border-radius:999px;padding:13px 20px 13px 18px;cursor:pointer;white-space:nowrap}
+.pn-menu{position:absolute;top:0;right:0;height:100%;display:inline-flex;align-items:center;gap:12px;border:0;background:none;color:var(--night);font:600 15px/1 var(--body);padding:0 22px 0 20px;cursor:pointer;white-space:nowrap;opacity:1;transition:opacity .3s ease .3s}
+.pnav.open .pn-menu{opacity:0;pointer-events:none;transition:opacity .15s ease}
 .pn-ic{display:flex;flex-direction:column;gap:5px}
-.pn-ic i{display:block;width:18px;height:2px;border-radius:2px;background:currentColor}
-.pnav.collapsed{padding:0;background:transparent;box-shadow:none}
-.pnav.collapsed .pn-av{width:0;margin:0;overflow:hidden}
-.pnav.collapsed .pn-links{max-width:0;opacity:0;pointer-events:none}
-.pnav.collapsed .pn-menu{display:inline-flex;box-shadow:0 14px 40px -14px rgba(0,0,0,.6)}
-.pnav.collapsed .pn-menu:hover,.pnav.drop .pn-menu{background:var(--sun)}
-.pnav.collapsed.drop .pn-links{position:absolute;top:calc(100% + 10px);right:0;flex-direction:column;align-items:stretch;max-width:none;opacity:1;pointer-events:auto;background:var(--lilac);border-radius:22px;padding:8px;min-width:210px;box-shadow:0 20px 50px -16px rgba(0,0,0,.6)}
-.pnav.drop .pn-links a{padding:14px 16px}
-.pnav.drop .pn-links .pn-talk{margin:0}
+.pn-ic i{display:block;width:18px;height:2px;border-radius:2px;background:currentColor;transition:transform .3s}
+.pnav:hover .pn-ic i:first-child{transform:translateX(3px)}
+.pnav.drop{overflow:visible}
+.pnav.drop .pn-menu{opacity:1;pointer-events:auto}
+.pnav.drop .pn-open{top:calc(100% + 10px);right:0;flex-direction:column;align-items:stretch;opacity:1;transform:none;pointer-events:auto;background:var(--lilac);border-radius:22px;padding:8px;min-width:220px;box-shadow:0 20px 50px -16px rgba(0,0,0,.6)}
+.pnav.drop .pn-av{display:none}
+.pnav.drop .pn-links{flex-direction:column;align-items:stretch;gap:4px}
+.pnav.drop .pn-links a{padding:14px 16px;margin:0}
 @media (max-width:760px){.pnav{top:18px}}
+@media (prefers-reduced-motion:reduce){.pnav,.pn-open,.pn-menu{transition:none!important}}
 /* Hero */
 .c-hero{padding:clamp(130px,18vh,190px) var(--pad) 0}
 .crumb{font-size:15px;color:var(--mute);margin-bottom:24px}
@@ -277,6 +280,7 @@ strong{color:#fff;font-weight:650}
   <a class="mark" href="index.html" aria-label="RE, Refaat Elbrawy home">RE</a>
 </header>
 <div class="pnav" id="pnav">
+  <div class="pn-open">
   <a class="pn-av" href="index.html#top" aria-label="Back to top"><img src="assets/avatar-sm.webp" width="96" height="96" alt=""></a>
   <nav class="pn-links" aria-label="Main">
     <a href="index.html#work">Work</a>
@@ -285,6 +289,7 @@ strong{color:#fff;font-weight:650}
     <a class="pn-cv" href="assets/Refaat-Elbrawy-CV.pdf" download>Download CV</a>
     <a class="pn-talk" href="index.html#contact">Let's talk</a>
   </nav>
+  </div>
   <button class="pn-menu" id="pnMenu" type="button" aria-expanded="false" aria-label="Open menu"><span class="pn-ic" aria-hidden="true"><i></i><i></i></span>Menu</button>
 </div>
 
@@ -485,27 +490,29 @@ strong{color:#fff;font-weight:650}
   /* ---------- Pill nav: a "Menu" pill that opens on hover or click ---------- */
   (() => {
     const pn = document.getElementById('pnav'); if (!pn) return;
-    const btn = pn.querySelector('.pn-menu'), hasFull = !!document.getElementById('mmenu');
-    let forced = false, forcedY = 0;
+    const btn = pn.querySelector('.pn-menu'), inner = pn.querySelector('.pn-open'), hasFull = !!document.getElementById('mmenu');
     const mobile = () => innerWidth <= 760;
-    const update = () => {
-      const c = mobile() || !forced;
-      pn.classList.toggle('collapsed', c);
-      btn.setAttribute('aria-expanded', String(!c || pn.classList.contains('drop')));
+    let openW = 0, closedW = 112, isOpen = false, closeT;
+    const measure = () => { openW = inner.scrollWidth + 12; closedW = btn.scrollWidth; pn.style.setProperty('--w', (isOpen ? openW : closedW) + 'px'); };
+    const setOpen = v => {
+      if (mobile()) v = false;
+      isOpen = v; pn.classList.toggle('open', v);
+      pn.style.setProperty('--w', (v ? openW : closedW) + 'px');
+      btn.setAttribute('aria-expanded', String(v || pn.classList.contains('drop')));
     };
+    pn.addEventListener('pointerenter', e => { if (e.pointerType !== 'mouse' || mobile()) return; clearTimeout(closeT); setOpen(true); });
+    pn.addEventListener('pointerleave', e => { if (e.pointerType !== 'mouse' || mobile()) return; clearTimeout(closeT); closeT = setTimeout(() => setOpen(false), 280); });
+    pn.addEventListener('focusin', () => { if (!mobile()) setOpen(true); });
+    pn.addEventListener('focusout', e => { if (!pn.contains(e.relatedTarget)) setOpen(false); });
     btn.addEventListener('click', () => {
-      if (mobile()) { if (hasFull) return; pn.classList.toggle('drop'); update(); return; }
-      forced = true; update();
-      const first = pn.querySelector('.pn-links a'); if (first) setTimeout(() => first.focus({ preventScroll: true }), 350);
+      if (mobile()) { if (hasFull) return; pn.classList.toggle('drop'); btn.setAttribute('aria-expanded', String(pn.classList.contains('drop'))); return; }
+      setOpen(true); const first = pn.querySelector('.pn-links a'); if (first) setTimeout(() => first.focus({ preventScroll: true }), 300);
     });
-    pn.querySelectorAll('.pn-links a').forEach(a => a.addEventListener('click', () => { pn.classList.remove('drop'); if (mobile()) setTimeout(update, 50); }));
-    document.addEventListener('click', e => { if (pn.classList.contains('drop') && !pn.contains(e.target)) { pn.classList.remove('drop'); update(); } });
-    addEventListener('keydown', e => { if (e.key === 'Escape' && pn.classList.contains('drop')) { pn.classList.remove('drop'); update(); btn.focus(); } });
-    let closeT;
-    pn.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse' && !mobile()) { clearTimeout(closeT); forced = true; update(); } });
-    pn.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse' && !mobile()) { clearTimeout(closeT); closeT = setTimeout(() => { forced = false; update(); }, 350); } });
-    pn.addEventListener('focusout', e => { if (!mobile() && !pn.contains(e.relatedTarget)) { forced = false; update(); } });
-    addEventListener('resize', update); update();
+    pn.querySelectorAll('.pn-links a').forEach(a => a.addEventListener('click', () => { pn.classList.remove('drop'); setOpen(false); }));
+    document.addEventListener('click', e => { if (pn.classList.contains('drop') && !pn.contains(e.target)) { pn.classList.remove('drop'); btn.setAttribute('aria-expanded', 'false'); } });
+    addEventListener('keydown', e => { if (e.key === 'Escape' && (isOpen || pn.classList.contains('drop'))) { pn.classList.remove('drop'); setOpen(false); btn.focus(); } });
+    addEventListener('resize', () => { if (mobile()) setOpen(false); measure(); });
+    measure(); (document.fonts ? document.fonts.ready : Promise.resolve()).then(measure);
   })();
 
   const tEl = document.getElementById('cairoTime');
