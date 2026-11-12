@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sakani Hybrid Auction — Case study by Refaat Elbrawy</title>
+<meta name="description" content="How a list of small fixes for NHC-Sakani's auction product became a research-led redesign of the whole bidding journey.">
+<meta name="theme-color" content="#120B2E">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="512x512" href="assets/favicon-512.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Refaat Elbrawy">
+<meta property="og:title" content="Sakani Hybrid Auction — case study by Refaat Elbrawy">
+<meta property="og:description" content="How a short list of fixes became a research-led redesign of the whole auction journey, from discovery to the last refund.">
+<meta property="og:image" content="assets/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Sakani Hybrid Auction — case study by Refaat Elbrawy">
+<meta name="twitter:description" content="How a short list of fixes became a research-led redesign of the whole auction journey, from discovery to the last refund.">
+<meta name="twitter:image" content="assets/og.jpg">
+<link rel="preload" href="fonts/anybody.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/schibsted.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{font-family:"Anybody";src:url(fonts/anybody.woff2) format("woff2");font-weight:100 900;font-stretch:50% 150%;font-display:swap}
+@font-face{font-family:"Schibsted";src:url(fonts/schibsted.woff2) format("woff2");font-weight:400 900;font-display:swap}
+:root{
+  --night:#120B2E;--violet:#6551FF;--plum:#5E2AA9;--lilac:#EEEBFF;--sun:#FFE14D;
+  --mute:rgba(238,235,255,.66);--line:rgba(238,235,255,.14);
+  --pad:clamp(20px,4vw,56px);
+  --display:"Anybody",system-ui,sans-serif;--body:"Schibsted",system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html.lenis,html.lenis body{height:auto}
+body{background:var(--night);color:var(--lilac);font-family:var(--body);font-size:18px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%;height:auto}
+:focus-visible{outline:2px solid var(--sun);outline-offset:4px;border-radius:6px}
+strong{color:#fff;font-weight:650}
+
+.bar{position:fixed;inset:0 0 auto 0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:20px var(--pad);transition:background-color .3s,backdrop-filter .3s}
+.bar.solid{background:rgba(18,11,46,.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.mark{font-family:var(--display);font-weight:900;font-stretch:150%;font-size:22px;letter-spacing:-.02em}
+.bar nav{display:flex;align-items:center;gap:clamp(16px,3vw,32px);font-size:15px;font-weight:500}
+.back{display:inline-flex;align-items:center;gap:8px;color:var(--mute);transition:color .2s}
+.back:hover{color:#fff}
+.talk{border:1.5px solid rgba(238,235,255,.3);border-radius:999px;padding:9px 18px}
+.progress{position:fixed;left:0;top:0;height:3px;width:100%;background:var(--sun);transform-origin:left;transform:scaleX(0);z-index:60}
+
+.snd{display:inline-flex;align-items:center;justify-content:center;gap:3px;width:42px;height:42px;border-radius:50%;border:1.5px solid rgba(238,235,255,.3);background:none;cursor:pointer;padding:0;transition:border-color .2s,background-color .2s}
+.snd:hover{border-color:var(--lilac)}
+.snd span{width:3px;height:4px;border-radius:2px;background:var(--lilac);transition:height .3s}
+.snd[aria-pressed="true"]{background:var(--sun);border-color:var(--sun)}
+.snd[aria-pressed="true"] span{background:var(--night);animation:eq 1s ease-in-out infinite}
+.snd[aria-pressed="true"] span:nth-child(2){animation-delay:-.3s}
+.snd[aria-pressed="true"] span:nth-child(3){animation-delay:-.6s}
+.snd[aria-pressed="true"] span:nth-child(4){animation-delay:-.15s}
+@keyframes eq{0%,100%{height:4px}50%{height:14px}}
+@media (prefers-reduced-motion:reduce){.snd[aria-pressed="true"] span{animation:none;height:10px}}
+/* Hero */
+.c-hero{padding:clamp(130px,18vh,190px) var(--pad) 0}
+.crumb{font-size:15px;color:var(--mute);margin-bottom:24px}
+.crumb a:hover{color:#fff}
+.c-title{font-family:var(--display);font-weight:800;font-stretch:115%;font-size:clamp(52px,9vw,168px);line-height:.88;letter-spacing:-.05em}
+.c-title .line{display:block;overflow:hidden;padding-bottom:.05em}
+.c-title .line>span{display:inline-block}
+.c-lead{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:clamp(32px,6vw,96px);margin-top:clamp(32px,5vh,56px);align-items:start}
+.c-lead p{font-size:clamp(19px,1.6vw,24px);line-height:1.45;color:var(--lilac);max-width:36rem}
+.meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 32px}
+.meta dt{font-size:13px;color:var(--mute);margin-bottom:2px}
+.meta dd{font-weight:600}
+
+.cover{position:relative;margin:clamp(48px,8vh,96px) var(--pad) 0;aspect-ratio:16/9.4;border-radius:32px;overflow:hidden;container-type:inline-size;
+  background:radial-gradient(80% 90% at 70% 10%,#7A69FF,transparent 60%),#4C3BD9}
+.cover .dots{position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.18) 1px,transparent 1.2px);background-size:2.4cqw 2.4cqw;opacity:.6}
+.cv-browser{position:absolute;left:5cqw;top:6cqw;width:64cqw;background:#fff;border-radius:1.2cqw;overflow:hidden;box-shadow:0 3cqw 6cqw -2cqw rgba(10,6,40,.6)}
+.cv-bar{display:flex;gap:.6cqw;align-items:center;padding:1cqw 1.4cqw;background:#F1F0F7}
+.cv-bar i{width:.9cqw;height:.9cqw;border-radius:50%;background:#D6D3E4}
+.cv-phone{position:absolute;width:17cqw;aspect-ratio:390/844;background:#0E0B22;border-radius:2.8cqw;padding:.7cqw;box-shadow:0 3cqw 6cqw -2cqw rgba(10,6,40,.7)}
+.cv-phone img{width:100%;height:100%;object-fit:cover;border-radius:2.2cqw}
+
+/* Generic sections */
+.sec{padding:clamp(96px,16vh,180px) var(--pad) 0}
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:clamp(32px,6vw,110px);align-items:start}
+.h2{font-family:var(--display);font-weight:800;font-stretch:110%;font-size:clamp(36px,4.6vw,80px);line-height:.95;letter-spacing:-.04em}
+.label{display:inline-flex;align-items:center;gap:10px;font-size:15px;color:var(--sun);margin-bottom:20px;font-weight:600}
+.label i{width:22px;height:2px;background:var(--sun)}
+.prose p{color:var(--mute);max-width:36rem}
+.prose p+p{margin-top:1.1em}
+.quote{margin-top:clamp(40px,6vh,64px);border-left:3px solid var(--sun);padding:4px 0 4px 24px;font-family:var(--display);font-stretch:105%;font-weight:700;font-size:clamp(22px,2vw,30px);line-height:1.25;letter-spacing:-.02em;max-width:34rem}
+
+.greenlight{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(32px,5vw,80px);align-items:center}
+.shot-dark{border-radius:28px;overflow:hidden;padding:5%;background:radial-gradient(80% 90% at 70% 0,#7A69FF,transparent 60%),#4C3BD9}
+.badge{display:inline-flex;align-items:center;gap:10px;margin-top:32px;background:var(--sun);color:var(--night);font-weight:700;border-radius:999px;padding:12px 20px}
+.badge i{width:10px;height:10px;border-radius:50%;background:#16B364;box-shadow:0 0 0 4px rgba(22,179,100,.25)}
+
+.pops{position:relative;width:100%;aspect-ratio:1/1.12;container-type:inline-size}
+.pops img{position:absolute;border-radius:2.4cqw;box-shadow:0 4cqw 8cqw -3cqw rgba(10,6,40,.55),0 0 0 1px rgba(255,255,255,.4)}
+.pops .p1{left:2%;top:2%;width:64%}
+.pops .p2{right:0;top:49%;width:60%;border-radius:2cqw;z-index:2}
+.pops .p3{left:4%;bottom:2%;width:56%}
+.frame .pops{width:auto;height:92%;aspect-ratio:1.5/1}
+.frame .pops .p1{left:2%;top:4%;width:46%}
+.frame .pops .p2{right:2%;top:10%;width:46%}
+.frame .pops .p3{left:30%;bottom:2%;width:44%}
+.after{position:relative;width:88%;height:88%}
+.after .ap{position:absolute;left:0;top:4%;width:76%;border-radius:14px}
+.after .ac{position:absolute;right:0;bottom:6%;width:30%;z-index:2;border-radius:14px;box-shadow:0 30px 60px -24px rgba(10,6,40,.6),0 0 0 1px rgba(18,11,46,.06)}
+.gdev{position:relative}
+.gphones{display:flex;gap:6%;height:90%;align-items:center;justify-content:center;width:100%}
+.gphones>img{width:24%}
+.gphones>img:nth-child(2){margin-top:8%}
+/* Closing */
+.closing{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:clamp(32px,6vw,110px)}
+.cta{margin:clamp(80px,12vh,140px) var(--pad) 0;border-radius:36px;padding:clamp(40px,6vw,88px);position:relative;overflow:hidden;
+  background:radial-gradient(70% 120% at 85% 0,#8A7BFF,transparent 60%),var(--violet);color:#fff}
+.cta h2{font-family:var(--display);font-weight:800;font-stretch:115%;font-size:clamp(38px,5vw,88px);line-height:.95;letter-spacing:-.045em;max-width:15ch}
+.cta p{margin-top:24px;max-width:32rem;font-size:clamp(17px,1.4vw,20px);color:rgba(255,255,255,.86)}
+.cta-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:36px}
+.cta-btn{display:inline-flex;align-items:center;gap:10px;border-radius:999px;padding:16px 26px;font-weight:600;font-size:16px;cursor:pointer;border:2px solid #fff;transition:transform .2s,background-color .2s,color .2s;font-family:inherit}
+.cta-btn.primary{background:var(--sun);border-color:var(--sun);color:var(--night)}
+.cta-btn.ghost{background:transparent;color:#fff}
+.cta-btn:hover{transform:translateY(-2px)}
+.cta-btn.ghost:hover{background:#fff;color:var(--night)}
+.cta-contacts{display:flex;flex-wrap:wrap;gap:8px 28px;margin-top:28px;font-size:15px;color:rgba(255,255,255,.8)}
+.cta-ring{position:absolute;right:-6vw;bottom:-14vw;width:min(46vw,620px);aspect-ratio:1;border-radius:50%;border:2px dashed rgba(255,255,255,.3);animation:spin 40s linear infinite}
+.cta-ring::after{content:"";position:absolute;inset:16%;border-radius:50%;border:2px solid rgba(255,225,77,.5)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.devimg{display:block;width:100%;height:auto;filter:drop-shadow(0 30px 40px rgba(10,6,40,.45))}
+.dev{position:absolute}
+/* More screens (bento) */
+.more-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:clamp(32px,5vh,56px)}
+.more-intro{color:var(--mute);max-width:26rem}
+.bento{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:20px}
+.tile{position:relative;display:flex;flex-direction:column;border:0;padding:0;border-radius:28px;overflow:hidden;cursor:zoom-in;text-align:left;font:inherit;color:inherit;isolation:isolate}
+.t-details{grid-column:span 5;grid-row:span 2}
+.t-wide{grid-column:span 7;aspect-ratio:16/10.4}
+.t-phone{grid-column:span 4;aspect-ratio:4/4.6}
+.t-screen{position:absolute;left:7%;right:7%;top:7%;bottom:0;border-radius:14px 14px 0 0;overflow:hidden;background:#fff;box-shadow:0 30px 60px -24px rgba(10,6,40,.55);transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+.t-screen img{width:100%;height:auto;display:block}
+.tile:hover .t-screen{transform:translateY(-8px)}
+.t-scroll img{transition:transform 6s cubic-bezier(.45,0,.55,1)}
+.t-details:hover .t-scroll img{transform:translateY(calc(-100% + var(--h,600px)))}
+.t-ph{left:auto;right:auto;width:46%;left:27%;top:9%;border-radius:28px 28px 0 0;border:7px solid #0E0B22;border-bottom:0}
+.t-sheet{left:12%;right:12%;top:auto;bottom:0;border-radius:22px 22px 0 0}
+.t-cap{position:absolute;left:16px;bottom:16px;z-index:2;display:inline-flex;align-items:center;gap:8px;background:rgba(18,11,46,.82);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#fff;font-weight:600;font-size:14px;border-radius:999px;padding:8px 14px;transform:translateY(6px);opacity:.92;transition:transform .35s,opacity .35s}
+.t-cap em{font-style:normal;color:var(--sun);font-weight:500}
+.tile:hover .t-cap{transform:none;opacity:1}
+@media (hover:none){.t-cap em{display:none}}
+.lightbox{position:fixed;inset:0;z-index:80;background:rgba(10,6,30,.88);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:grid;place-items:center;padding:5vh 5vw;overflow:auto}
+.lightbox[hidden]{display:none}
+.lightbox figure{max-width:min(1200px,100%)}
+.lightbox img{display:block;max-width:100%;max-height:82vh;width:auto;margin:0 auto;border-radius:14px;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.lightbox.tall img{max-height:none}
+.lightbox figcaption{margin-top:14px;text-align:center;color:var(--mute);font-size:15px}
+.lb-close{position:fixed;top:20px;right:20px;width:48px;height:48px;border-radius:50%;border:1.5px solid rgba(255,255,255,.4);background:none;color:#fff;font-size:18px;cursor:pointer}
+.lb-close:hover{background:#fff;color:var(--night)}
+@media (max-width:900px){
+  .t-details,.t-wide,.t-phone{grid-column:1 / -1}
+  .t-details{aspect-ratio:4/5;grid-row:auto}
+}
+/* Research steps */
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;margin-top:clamp(40px,6vh,72px)}
+.step{background:rgba(238,235,255,.05);border:1px solid var(--line);border-radius:24px;padding:24px;display:flex;flex-direction:column;gap:16px}
+.step .n{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:var(--violet);font-weight:700;color:#fff}
+.step h3{font-family:var(--display);font-stretch:108%;font-weight:700;font-size:24px;letter-spacing:-.02em;line-height:1.1}
+.step p{color:var(--mute);font-size:16px}
+.step figure{margin-top:auto;border-radius:14px;overflow:hidden;background:#fff;aspect-ratio:4/3;display:grid;place-items:center}
+.step figure img{width:100%;height:100%;object-fit:contain}
+
+/* The big question */
+.ask{padding:clamp(120px,20vh,220px) var(--pad);text-align:left}
+.ask p{font-family:var(--display);font-weight:800;font-stretch:112%;font-size:clamp(40px,6.6vw,120px);line-height:1;letter-spacing:-.045em;max-width:16ch}
+.ask .w{opacity:.3;transition:none}
+.ask small{display:block;margin-bottom:24px;font-size:16px;color:var(--mute)}
+
+/* Journey */
+.journey{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(20px,3vw,48px);margin-top:clamp(48px,7vh,90px)}
+.journey svg.path{position:absolute;left:0;top:70px;width:100%;height:120px;overflow:visible;pointer-events:none}
+.journey svg.path path{fill:none;stroke:var(--sun);stroke-width:2;stroke-dasharray:6 8}
+.stage-card{position:relative;text-align:left}
+.stage-card .art{position:relative;z-index:1;width:min(100%,260px);aspect-ratio:1.2;border-radius:24px;background:#F3F2F7;display:grid;place-items:center;overflow:hidden;margin-bottom:24px}
+.stage-card .art img{width:92%}
+.stage-card .tag{display:inline-grid;place-items:center;width:36px;height:36px;border-radius:50%;border:1.5px solid var(--sun);color:var(--sun);font-weight:700;margin-bottom:12px}
+.stage-card h3{font-family:var(--display);font-stretch:110%;font-weight:800;font-size:clamp(26px,2.4vw,36px);letter-spacing:-.03em;line-height:1}
+.stage-card p{color:var(--mute);margin-top:10px;max-width:24rem}
+
+/* Screens: horizontal pinned gallery */
+.gallery{position:relative;overflow:hidden}
+.g-intro{padding:0 var(--pad);margin-bottom:clamp(24px,3.5vh,40px)}
+#gallery{padding-top:clamp(70px,10vh,110px)}
+.g-track{display:flex;gap:clamp(20px,2.4vw,36px);padding:0 var(--pad);width:max-content}
+.panel{width:min(62vw,880px);flex:none;display:grid;grid-template-rows:auto auto;gap:22px}
+.panel .frame{border-radius:28px;overflow:hidden;aspect-ratio:16/9.6;max-height:62vh;display:grid;place-items:center;position:relative}
+.f-violet{background:radial-gradient(80% 90% at 70% 0,#7A69FF,transparent 60%),#4C3BD9}
+.f-plum{background:radial-gradient(80% 90% at 20% 0,#7A44C9,transparent 60%),#3F1C78}
+.f-sun{background:radial-gradient(80% 90% at 80% 0,#FFF0A3,transparent 60%),#F5CF2E}
+.f-lilac{background:radial-gradient(80% 90% at 30% 0,#fff,transparent 60%),#DCD6FF}
+.f-black{background:#000}
+.frame .shot{width:84%;border-radius:14px;overflow:hidden;box-shadow:0 30px 60px -24px rgba(10,6,40,.6);background:#fff}
+.frame .shot.tall{width:auto;height:86%}
+.frame .shot.tall img{height:100%;width:auto}
+.ends{display:flex;flex-direction:column;gap:14px;width:62%}
+.ends img{border-radius:16px;box-shadow:0 24px 50px -24px rgba(10,6,40,.6)}
+.ends img:nth-child(2){margin-left:10%}
+.ends img:nth-child(3){margin-left:20%}
+.phones{display:flex;gap:4%;height:88%;align-items:center}
+.phones div{height:100%;aspect-ratio:390/844;background:#0E0B22;border-radius:34px;padding:8px;box-shadow:0 30px 60px -24px rgba(10,6,40,.6)}
+.phones div:nth-child(2){transform:translateY(6%)}
+.phones img{width:100%;height:100%;object-fit:cover;border-radius:27px}
+.cap{display:grid;grid-template-columns:auto minmax(0,1fr);gap:18px;align-items:baseline}
+.cap b{font-family:var(--display);font-stretch:110%;font-weight:800;font-size:clamp(22px,2vw,30px);letter-spacing:-.03em;white-space:nowrap}
+.cap span{color:var(--mute);max-width:36rem}
+
+/* Outcome */
+.outcome{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:clamp(32px,6vw,110px)}
+.wins{list-style:none;display:flex;flex-direction:column}
+.wins li{display:grid;grid-template-columns:48px minmax(0,1fr);gap:16px;padding:22px 0;border-top:1px solid var(--line)}
+.wins li:last-child{border-bottom:1px solid var(--line)}
+.wins i{display:grid;place-items:center;width:36px;height:36px;border-radius:50%;background:var(--sun);color:var(--night);font-style:normal;font-weight:800}
+.wins b{display:block;font-size:19px;color:#fff;font-weight:650}
+.wins span{color:var(--mute);font-size:16px}
+
+/* Next */
+.next{margin-top:clamp(120px,18vh,200px);border-top:1px solid var(--line);padding:clamp(56px,9vh,96px) var(--pad)}
+.next a{display:flex;align-items:center;justify-content:space-between;gap:24px}
+.next small{display:block;color:var(--mute);font-size:16px;margin-bottom:10px}
+.next strong{display:block;font-family:var(--display);font-weight:800;font-stretch:115%;font-size:clamp(40px,7vw,128px);line-height:.9;letter-spacing:-.05em;transition:color .3s}
+.next a:hover strong{color:var(--sun)}
+.next .arrow{flex:none;display:grid;place-items:center;width:clamp(64px,8vw,120px);aspect-ratio:1;border-radius:50%;background:var(--lilac);color:var(--night);transition:transform .5s cubic-bezier(.2,.8,.2,1),background-color .3s}
+.next a:hover .arrow{transform:rotate(-45deg);background:var(--sun)}
+.next .arrow svg{width:40%;height:40%}
+.foot{padding:0 var(--pad) 28px;overflow:hidden}
+.foot-big{font-family:var(--display);font-weight:900;font-stretch:125%;font-size:12vw;line-height:.85;letter-spacing:-.05em;white-space:nowrap;margin:0 0 24px;color:var(--violet);overflow:hidden;padding-bottom:.04em}
+.foot-big .ch{display:inline-block;will-change:transform}
+.foot-bar{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px 24px;padding-top:20px;border-top:1px solid rgba(238,235,255,.12);color:var(--mute);font-size:14px}
+.foot-bar a:hover{color:var(--lilac)}
+
+@media (max-width:900px){
+  .closing{grid-template-columns:minmax(0,1fr)}
+  .cta{border-radius:24px}
+  .c-lead,.split,.greenlight,.outcome{grid-template-columns:minmax(0,1fr)}
+  .steps,.journey{grid-template-columns:minmax(0,1fr)}
+  .journey svg.path{display:none}
+  .cover{border-radius:20px}
+  .g-track{flex-direction:column;width:auto}
+  .panel{width:100%}
+  .cap{grid-template-columns:minmax(0,1fr);gap:6px}
+  .back span{display:none}
+}
+@media (prefers-reduced-motion:reduce){.ask .w{opacity:1}}
+</style>
+</head>
+<body>
+<div class="progress" aria-hidden="true"></div>
+<header class="bar" id="top">
+  <a class="mark" href="index.html" aria-label="RE, Refaat Elbrawy home">RE</a>
+  <nav aria-label="Case study">
+    <a class="back" href="index.html#work" aria-label="All work"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M11 6l-6 6 6 6"/></svg><span>All work</span></a>
+    <button class="snd" id="soundBtn" type="button" aria-pressed="false" aria-label="Turn sound on"><span></span><span></span><span></span><span></span></button>
+      <a class="talk" href="index.html#contact">Let's talk</a>
+  </nav>
+</header>
+
+<main>
+  <section class="c-hero">
+    <p class="crumb"><a href="index.html#work">Work</a> / Online auctions</p>
+    <h1 class="c-title"><span class="line"><span>Sakani</span></span><span class="line"><span>Hybrid Auction</span></span></h1>
+    <div class="c-lead">
+      <p class="fade">A product inside the Sakani platform that lets organisations sell fixed assets through online or hybrid auctions, and lets people and companies join and bid with ease and full transparency.</p>
+      <dl class="meta fade">
+        <div><dt>Role</dt><dd>Senior Product Designer</dd></div>
+        <div><dt>Company</dt><dd>NHC-Sakani</dd></div>
+        <div><dt>Platforms</dt><dd>Web and mobile</dd></div>
+        <div><dt>Year</dt><dd>2025</dd></div>
+        <div style="grid-column:span 2"><dt>What I did</dt><dd>Research, business pitch, user journey, UX and UI, notifications, handoff</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <div class="cover" aria-label="The redesigned auction on desktop and mobile">
+    <div class="dots"></div>
+    <div class="cv-browser cv-item" data-speed="-6"><div class="cv-bar"><i></i><i></i><i></i></div><img src="assets/auction-desk.webp" width="1181" height="850" alt="Desktop bidding board with live stream, countdown, latest bids and the bid input"></div>
+    <div class="cv-phone cv-item" data-speed="10" style="left:66cqw;top:10cqw;rotate:-4deg"><img src="assets/auction-list.webp" width="390" height="844" alt="Mobile list of ongoing auctions with a countdown on each card"></div>
+    <div class="cv-phone cv-item" data-speed="18" style="left:80cqw;top:18cqw;rotate:5deg"><img src="assets/auction-map.webp" width="390" height="844" alt="Mobile map view with an auction pin selected"></div>
+  </div>
+
+  <section class="sec">
+    <div class="split">
+      <div><p class="label"><i></i>Context</p><h2 class="h2 reveal-h">It was meant to be a few small fixes</h2></div>
+      <div class="prose fade">
+        <p>The project started with a short list of requirements from the business team: a handful of improvements they needed in the auction product. I saw a bigger opportunity in it, so I took the initiative to study what could really be improved, from what the business needed all the way to what bidders experience.</p>
+        <p>Unlike most projects, my role here wasn't only to deliver the requirements. It was to <strong>lead the product thinking</strong>, without letting the current requirements set a ceiling on what we could fix.</p>
+        <blockquote class="quote">The brief asked for tweaks. The product needed a rethink.</blockquote>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="greenlight">
+      <div>
+        <p class="label"><i></i>The challenge</p>
+        <h2 class="h2 reveal-h">Time wasn't on my side</h2>
+        <div class="prose fade" style="margin-top:28px">
+          <p>Requirements usually arrive with a close delivery date, and this time the ask was bigger than a few fixes. I had to research the current auction, understand its problems, look at best practices, and then convince the business team that the whole product needed a redesign.</p>
+          <p>So I started with research instead of screens, and put together a short presentation that laid out the problems and the opportunities.</p>
+        </div>
+        <span class="badge fade"><i></i>The business team gave the green light to redesign the full auction</span>
+      </div>
+      <figure class="shot-dark fade"><div class="pops"><img class="p1" src="assets/pop-confirm.webp" width="656" height="494" alt="Bidding confirmation showing the bid price, commission, VAT and total" loading="lazy"><img class="p2" src="assets/pop-sms.webp" width="358" height="152" alt="Push notification: you won the auction" loading="lazy"><img class="p3" src="assets/pop-won.webp" width="656" height="302" alt="Congratulations, you won the auction, with a button to complete the procedures" loading="lazy"></div></figure>
+    </div>
+  </section>
+
+  <section class="sec">
+    <p class="label"><i></i>Research</p>
+    <h2 class="h2 reveal-h" style="max-width:14ch">Before redesigning anything</h2>
+    <p class="prose fade" style="margin-top:24px"><span style="color:var(--mute);display:block;max-width:40rem">Once we had the green light I didn't jump into screens. I worked in three steps, and rebuilt the journey end to end before drawing a single UI.</span></p>
+    <div class="steps">
+      <article class="step fade"><span class="n">1</span><h3>The current experience</h3><p>Reviewed the existing journey and analysed it step by step, looking for where people get stuck and where the opportunities are.</p><figure><img src="assets/cs-current.webp" width="712" height="679" alt="Screens from the existing auction experience" loading="lazy"></figure></article>
+      <article class="step fade"><span class="n">2</span><h3>Best practices</h3><p>Studied platforms that specialise in real estate auctions to pull out patterns and practices worth learning from.</p><figure><img src="assets/cs-bench.webp" width="725" height="390" alt="Benchmark of specialised real estate auction platforms" loading="lazy"></figure></article>
+      <article class="step fade"><span class="n">3</span><h3>A new user journey</h3><p>Rebuilt the journey from scratch so joining an auction is clear and easy, from discovering it to everything that happens after.</p><figure><img src="assets/cs-flow.webp" width="687" height="752" alt="Flow diagram of the new auction journey" loading="lazy"></figure></article>
+    </div>
+  </section>
+
+  <section class="ask">
+    <small>The question that mattered most</small>
+    <p id="askText">Was the problem in the interface, or in the experience itself?</p>
+  </section>
+
+  <section class="sec" style="padding-top:0">
+    <div class="split">
+      <div><p class="label"><i></i>What I found</p><h2 class="h2 reveal-h">It wasn't one broken screen</h2></div>
+      <div class="prose fade"><p>The research showed the problems were spread across the whole journey, not stuck on a single page. So I stopped treating the auction as separate screens and designed it as <strong>one complete experience</strong>: before, during and after.</p></div>
+    </div>
+    <div class="journey">
+      <svg class="path" viewBox="0 0 1000 120" preserveAspectRatio="none" aria-hidden="true"><path id="jPath" d="M120 60 C 260 -10, 360 130, 500 60 S 760 -10, 880 60"/></svg>
+      <article class="stage-card fade"><div class="art"><img src="assets/cs-before.webp" width="524" height="432" alt="" loading="lazy"></div><span class="tag">1</span><h3>Before the auction</h3><p>New users didn't always know where to start, or what they needed to take part.</p></article>
+      <article class="stage-card fade"><div class="art"><img src="assets/cs-during.webp" width="525" height="432" alt="" loading="lazy"></div><span class="tag">2</span><h3>During the auction</h3><p>The auction's status, the time left and how the bids were moving weren't always clear enough.</p></article>
+      <article class="stage-card fade"><div class="art"><img src="assets/cs-after.webp" width="525" height="411" alt="" loading="lazy"></div><span class="tag">3</span><h3>After the auction</h3><p>What happens when you win? And when you don't? The next steps needed to be much clearer.</p></article>
+    </div>
+  </section>
+
+  <section class="sec gallery" id="gallery">
+    <div class="g-intro"><p class="label"><i></i>The design</p><h2 class="h2 reveal-h">Designing the whole auction</h2></div>
+    <div class="g-track" id="gTrack">
+      <article class="panel">
+        <div class="frame f-violet"><div class="shot"><img src="assets/cs-mapdesk.webp" width="1440" height="895" alt="Auctions page with filters, status tabs and a map of Riyadh" loading="lazy"></div></div>
+        <p class="cap"><b>Discover</b><span>Find auctions on a map or in a list, filter by city, property type and auction type, and switch between ongoing, upcoming and ended.</span></p>
+      </article>
+      <article class="panel">
+        <div class="frame f-lilac"><div class="shot tall" style="border-radius:20px"><img src="assets/cs-join.webp" width="656" height="782" alt="Join the auction dialog on the entry fee step" loading="lazy"></div></div>
+        <p class="cap"><b>Join</b><span>Joining is a short three-step flow: terms, your details, then the entry deposit. Your wallet balance is checked before you pay, so there are no surprises.</span></p>
+      </article>
+      <article class="panel">
+        <div class="frame f-plum"><div class="shot" style="width:70%"><img src="assets/auction-desk.webp" width="1181" height="850" alt="Bidding board" loading="lazy"></div></div>
+        <p class="cap"><b>Bid</b><span>One board shows the time left, where you stand, the bid you're about to place with quick increments, and the highest bid, next to the live stream and the latest bids.</span></p>
+      </article>
+      <article class="panel">
+        <div class="frame f-plum"><div class="pops"><img class="p1" src="assets/pop-confirm.webp" width="656" height="494" alt="Bidding confirmation showing the bid price, commission, VAT and total" loading="lazy"><img class="p2" src="assets/pop-sms.webp" width="358" height="152" alt="Push notification: you won the auction" loading="lazy"><img class="p3" src="assets/pop-won.webp" width="656" height="302" alt="Congratulations, you won the auction, with a button to complete the procedures" loading="lazy"></div></div>
+        <p class="cap"><b>Stay informed</b><span>In-app messages and SMS for the moments that matter: you joined, you're the highest bidder, you've been outbid, the auction was awarded to you.</span></p>
+      </article>
+      <article class="panel">
+        <div class="frame f-sun"><div class="after"><div class="shot ap"><img src="assets/cs-ended-page.webp" width="975" height="640" alt="Ended auction page with a deposit refund notice and the auction summary" loading="lazy"></div><img class="ac" src="assets/cs-ended-card.webp" width="327" height="367" alt="Ended auction card showing the total award amount" loading="lazy"></div></div>
+        <p class="cap"><b>After</b><span>An ended auction keeps its story: a clear refund notice if you didn't win, a full summary with the awarded price, and ended cards in the list that show the final amount.</span></p>
+      </article>
+      <article class="panel">
+        <div class="frame f-violet"><div class="phones"><div><img src="assets/auction-list.webp" width="390" height="844" alt="Mobile auction list" loading="lazy"></div><div><img src="assets/auction-map.webp" width="390" height="844" alt="Mobile map view" loading="lazy"></div></div></div>
+        <p class="cap"><b>On mobile</b><span>The same journey on a small screen: list and map views, live countdowns on every card, and filters that stay one tap away.</span></p>
+      </article>
+    </div>
+  </section>
+
+
+  <section class="sec more" id="more" aria-labelledby="more-title">
+    <div class="more-head">
+      <div><p class="label"><i></i>More screens</p><h2 class="h2 reveal-h" id="more-title">A closer look</h2></div>
+      <p class="more-intro fade">Pages and states from the full flow, on desktop and mobile. Click any screen to see it larger.</p>
+    </div>
+    <div class="bento">
+      <button class="tile t-details f-lilac" type="button" data-full="assets/more-details.webp" data-cap="Auction details: live stream, countdown, assets and location">
+        <span class="t-screen t-scroll"><img src="assets/more-details.webp" width="1181" height="2700" alt="Auction details page with live stream, countdown, list of assets, location map and description" loading="lazy"></span>
+        <span class="t-cap">Auction details <em>Hover to scroll</em></span>
+      </button>
+      <button class="tile t-wide f-violet" type="button" data-full="assets/more-mappin.webp" data-cap="Map view with an auction card on the selected pin">
+        <span class="t-screen"><img src="assets/more-mappin.webp" width="1440" height="900" alt="Map of Riyadh with an auction preview card on a selected pin" loading="lazy"></span>
+        <span class="t-cap">Map, pin selected</span>
+      </button>
+      <button class="tile t-wide f-plum" type="button" data-full="assets/more-grid.webp" data-cap="Grid view of ongoing auctions with live countdowns">
+        <span class="t-screen"><img src="assets/more-grid.webp" width="1440" height="900" alt="Grid of auction cards, each with a countdown, status and starting price" loading="lazy"></span>
+        <span class="t-cap">Auctions grid</span>
+      </button>
+      <button class="tile t-phone f-sun" type="button" data-full="assets/more-m-list.webp" data-cap="Mobile auctions list">
+        <span class="t-screen t-ph"><img src="assets/more-m-list.webp" width="390" height="844" alt="Mobile auction list with filters and countdowns" loading="lazy"></span>
+        <span class="t-cap">Mobile list</span>
+      </button>
+      <button class="tile t-phone f-violet" type="button" data-full="assets/more-m-filter.webp" data-cap="City filter bottom sheet">
+        <span class="t-screen t-sheet"><img src="assets/more-m-filter.webp" width="390" height="486" alt="Bottom sheet for filtering auctions by city" loading="lazy"></span>
+        <span class="t-cap">Filter sheet</span>
+      </button>
+      <button class="tile t-phone f-lilac" type="button" data-full="assets/more-m-menu.webp" data-cap="Mobile menu with the new Auction entry point">
+        <span class="t-screen t-ph"><img src="assets/more-m-menu.webp" width="392" height="812" alt="Mobile menu showing Auction as a new entry point" loading="lazy"></span>
+        <span class="t-cap">New entry point</span>
+      </button>
+    </div>
+  </section>
+
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Screen preview" hidden>
+    <button class="lb-close" type="button" aria-label="Close preview">✕</button>
+    <figure><img id="lbImg" src="" alt=""><figcaption id="lbCap"></figcaption></figure>
+  </div>
+
+  <section class="sec">
+    <div class="outcome">
+      <div><p class="label"><i></i>Outcome</p><h2 class="h2 reveal-h">What changed</h2></div>
+      <ul class="wins">
+        <li class="fade"><i>✓</i><div><b>One connected journey</b><span>From discovering an auction to what happens after it ends, instead of a set of separate pages.</span></div></li>
+        <li class="fade"><i>✓</i><div><b>A clear status at every moment</b><span>Ongoing, upcoming or ended, the time left, and exactly where you stand in the bidding.</span></div></li>
+        <li class="fade"><i>✓</i><div><b>Notifications that arrive in time</b><span>Outbid, highest bidder and awarded messages, in the app and by SMS.</span></div></li>
+        <li class="fade"><i>✓</i><div><b>A next step for every ending</b><span>Winning, losing and cancelled auctions each lead somewhere useful.</span></div></li>
+        <li class="fade"><i>✓</i><div><b>Research that changed the scope</b><span>A short, evidence-based pitch turned a list of tweaks into a full redesign.</span></div></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="closing">
+      <div><p class="label"><i></i>Closing thoughts</p><h2 class="h2 reveal-h">The best thing I designed wasn't a screen</h2></div>
+      <div class="prose fade">
+        <p>It was the case for redesigning. Starting with research gave the business team a clear reason to say yes, and it gave me a map of the whole journey before I touched a single pixel.</p>
+        <p>Treating the auction as one experience, from the first search to the last refund, is what made the details work: the countdown, the bidding board, the messages and every possible ending all tell the same story.</p>
+        <p>The lesson I keep from this project: when the brief is small but the problem is big, <strong>show the problem first</strong>. People back what they can see.</p>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="next">
+    <a href="index.html#work"><div><small>Keep exploring</small><strong>See all work</strong></div><span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+  </section>
+</main>
+<footer class="foot">
+  <div class="foot-big" id="footBig" aria-hidden="true">Refaat Elbrawy</div>
+  <div class="foot-bar">
+    <span>© 2026 Refaat Elbrawy</span>
+    <span>Cairo, <time id="cairoTime">--:--</time></span>
+    <a href="#top">Back to top ↑</a>
+  </div>
+</footer>
+
+<script src="js/gsap.min.js"></script>
+<script src="js/ScrollTrigger.min.js"></script>
+<script src="js/lenis.min.js"></script>
+<script src="js/sound.js"></script>
+<script>
+(() => {
+  const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const bar = $('.bar');
+  const tEl = document.getElementById('cairoTime');
+  const tick = () => { try { tEl.textContent = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'Africa/Cairo' }).format(new Date()); } catch {} };
+  tick(); setInterval(tick, 30000);
+  const fb = $('#footBig');
+  fb.innerHTML = [...fb.textContent].map(c => `<span class="ch">${c === ' ' ? '&nbsp;' : c}</span>`).join('');
+  const fitFoot = () => { fb.style.fontSize = '100px'; const chs = fb.querySelectorAll('.ch'); const w = chs[chs.length-1].getBoundingClientRect().right - chs[0].getBoundingClientRect().left; const cw = fb.parentElement.getBoundingClientRect().width - parseFloat(getComputedStyle(fb.parentElement).paddingLeft) * 2; fb.style.fontSize = (100 * cw / w * 0.99) + 'px'; };
+  fitFoot(); if (document.fonts) document.fonts.ready.then(fitFoot); addEventListener('resize', fitFoot);
+  addEventListener('scroll', () => bar.classList.toggle('solid', scrollY > 40), { passive: true });
+
+
+  // More screens: lightbox + hover scroll height
+  const lb = $('#lightbox'), lbImg = $('#lbImg'), lbCap = $('#lbCap');
+  let lastTile = null;
+  const closeLb = () => { lb.hidden = true; document.body.style.overflow = ''; if (lastTile) lastTile.focus(); };
+  $$('.tile').forEach(t => t.addEventListener('click', () => {
+    lastTile = t; lbImg.src = t.dataset.full; lbImg.alt = t.dataset.cap; lbCap.textContent = t.dataset.cap;
+    lb.classList.toggle('tall', t.classList.contains('t-details'));
+    lb.hidden = false; lb.scrollTop = 0; document.body.style.overflow = 'hidden'; lb.querySelector('.lb-close').focus();
+  }));
+  lb.addEventListener('click', e => { if (e.target === lb || e.target.closest('.lb-close')) closeLb(); });
+  addEventListener('keydown', e => { if (e.key === 'Escape' && !lb.hidden) closeLb(); });
+  const setH = () => $$('.t-scroll').forEach(sc => sc.style.setProperty('--h', sc.clientHeight + 'px'));
+  setH(); addEventListener('resize', setH); addEventListener('load', setH);
+  // Split the big question into words for the scroll fill
+  const ask = $('#askText');
+  ask.innerHTML = ask.textContent.split(' ').map(w => `<span class="w">${w}</span>`).join(' ');
+
+  if (!window.gsap || reduce) { $$('.ask .w').forEach(w => w.style.opacity = 1); return; }
+  gsap.registerPlugin(ScrollTrigger);
+  const lenis = new Lenis({ lerp: .1 });
+  lenis.on('scroll', ScrollTrigger.update);
+  gsap.ticker.add(t => lenis.raf(t * 1000)); gsap.ticker.lagSmoothing(0);
+
+  gsap.from('#footBig .ch', { yPercent: 105, stagger: .03, ease: 'power3.out', duration: .9, scrollTrigger: { trigger: '.foot', start: 'top 92%' } });
+  gsap.to('.progress', { scaleX: 1, ease: 'none', scrollTrigger: { start: 0, end: 'max', scrub: .3 } });
+
+  // Hero
+  gsap.from('.c-title .line > span', { yPercent: 105, duration: 1.2, stagger: .12, ease: 'power4.out', delay: .1 });
+  gsap.from(['.crumb', '.c-lead .fade'], { opacity: 0, y: 24, duration: .9, stagger: .1, ease: 'power3.out', delay: .5 });
+  gsap.from('.cv-item', { y: 120, opacity: 0, duration: 1.3, stagger: .15, ease: 'power3.out', delay: .6 });
+  $$('.cv-item').forEach(el => gsap.to(el, { yPercent: +el.dataset.speed * -1, ease: 'none', scrollTrigger: { trigger: '.cover', start: 'top bottom', end: 'bottom top', scrub: .6 } }));
+
+  // Headings and blocks
+  $$('.reveal-h').forEach(h => {
+    h.innerHTML = h.textContent.split(' ').map(w => `<span style="display:inline-block;overflow:hidden;vertical-align:top"><span style="display:inline-block">${w}</span></span>`).join(' ');
+    gsap.from(h.querySelectorAll('span > span'), { yPercent: 110, duration: .9, stagger: .04, ease: 'power4.out', scrollTrigger: { trigger: h, start: 'top 85%' } });
+  });
+  $$('.sec .fade, .wins .fade').forEach(el => gsap.from(el, { opacity: 0, y: 40, duration: .9, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 88%' } }));
+
+  // The question fills word by word as you scroll
+  gsap.from('.tile', { y: 60, opacity: 0, duration: 1, stagger: .08, ease: 'power3.out', scrollTrigger: { trigger: '.bento', start: 'top 85%' } });
+  gsap.to('.ask .w', { opacity: 1, stagger: .1, ease: 'none', scrollTrigger: { trigger: '.ask', start: 'top 70%', end: 'bottom 60%', scrub: .5 } });
+
+  // Journey path draws itself
+  const jp = $('#jPath');
+  if (jp) {
+    const len = jp.getTotalLength();
+    gsap.fromTo(jp, { strokeDashoffset: len, strokeDasharray: `6 8` }, { strokeDashoffset: 0, ease: 'none', scrollTrigger: { trigger: '.journey', start: 'top 80%', end: 'top 30%', scrub: .6 } });
+  }
+
+  // Horizontal gallery on desktop
+  const mm = gsap.matchMedia();
+  mm.add('(min-width: 901px)', () => {
+    const track = $('#gTrack');
+    const dist = () => track.scrollWidth - innerWidth;
+    gsap.to(track, { x: () => -dist(), ease: 'none', scrollTrigger: { trigger: '#gallery', start: 'top top', end: () => '+=' + dist(), pin: true, scrub: .6, invalidateOnRefresh: true } });
+  });
+  addEventListener('load', () => ScrollTrigger.refresh());
+})();
+</script>
+</body>
+</html>
