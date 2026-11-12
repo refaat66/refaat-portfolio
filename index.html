@@ -1050,9 +1050,12 @@ img{display:block;max-width:100%}
         await press(next, () => { done = setChk(next, true); });
         await sleep(.9);
         if (done === 4) {
-          await moveTo(idle(), 1.2); await sleep(2.2);
+          // Ship it, then show the real one
+          await moveTo(posOf(tgl, .82, .5), 1.1); await press(tgl, () => tgl.click()); await sleep(2.6);
+          await moveTo(idle(), 1.2); await sleep(1.2);
           for (const c of chks().slice(1).reverse()) { setChk(c, false); await sleep(.12); }
-          await sleep(.8);
+          // Back to the character before the next round
+          await moveTo(posOf(tgl, .82, .5), 1); if (tgl.getAttribute('aria-checked') === 'true') await press(tgl, () => tgl.click()); await sleep(1.4);
         }
       } else { for (const c of chks().slice(1)) setChk(c, false); }
     }
