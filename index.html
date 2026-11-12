@@ -67,7 +67,7 @@ img{display:block;max-width:100%}
 .menu-btn span{width:18px;height:2px;border-radius:2px;background:var(--lilac);transition:transform .35s cubic-bezier(.7,0,.2,1)}
 .menu-btn[aria-expanded="true"] span:first-child{transform:translateY(4px) rotate(45deg)}
 .menu-btn[aria-expanded="true"] span:last-child{transform:translateY(-4px) rotate(-45deg)}
-.mmenu{position:fixed;inset:0;z-index:60;background:var(--violet);display:flex;flex-direction:column;justify-content:space-between;padding:110px var(--pad) 36px;clip-path:circle(0% at calc(100% - 44px) 46px);transition:clip-path .7s cubic-bezier(.7,0,.2,1)}
+.mmenu{position:fixed;inset:0;z-index:70;background:var(--violet);display:flex;flex-direction:column;justify-content:space-between;padding:110px var(--pad) 36px;clip-path:circle(0% at calc(100% - 44px) 46px);transition:clip-path .7s cubic-bezier(.7,0,.2,1)}
 .mmenu[hidden]{display:flex;visibility:hidden}
 .mmenu.open{clip-path:circle(150% at calc(100% - 44px) 46px);visibility:visible}
 .mmenu nav{display:flex;flex-direction:column}
@@ -84,6 +84,29 @@ img{display:block;max-width:100%}
 .cv-top{display:inline-flex;align-items:center;border-radius:999px;padding:9px 18px;font-weight:600;background:var(--sun);color:var(--night)!important;opacity:1!important;transition:transform .2s}
 .cv-top:hover{transform:translateY(-2px)}
 .cv-top::after{display:none}
+/* ---------- Pill nav ---------- */
+.pnav{position:fixed;top:22px;right:var(--pad);z-index:55;display:flex;align-items:center;gap:4px;background:var(--lilac);color:var(--night);border-radius:999px;padding:6px;box-shadow:0 14px 40px -14px rgba(0,0,0,.6)}
+.pn-av{flex:none;width:40px;height:40px;border-radius:50%;overflow:hidden;background:var(--violet);transition:width .5s cubic-bezier(.7,0,.2,1),margin .5s}
+.pn-av img{width:100%;height:100%;object-fit:cover;display:block}
+.pn-links{display:flex;align-items:center;gap:2px;overflow:hidden;max-width:760px;transition:max-width .6s cubic-bezier(.7,0,.2,1),opacity .35s}
+.pn-links a{padding:11px 16px;border-radius:999px;font-weight:600;font-size:15px;line-height:1;white-space:nowrap;color:var(--night);transition:background-color .25s,color .25s}
+.pn-links a:hover{background:rgba(18,11,46,.08)}
+.pn-links .pn-cv{background:var(--sun)}
+.pn-links .pn-cv:hover{background:#FFD21F}
+.pn-links .pn-talk{background:var(--night);color:var(--lilac);margin-left:2px}
+.pn-links .pn-talk:hover{background:var(--violet);color:#fff}
+.pn-menu{display:none;align-items:center;gap:12px;border:0;background:var(--lilac);color:var(--night);font:600 15px/1 var(--body);border-radius:999px;padding:13px 20px 13px 18px;cursor:pointer;white-space:nowrap}
+.pn-ic{display:flex;flex-direction:column;gap:5px}
+.pn-ic i{display:block;width:18px;height:2px;border-radius:2px;background:currentColor}
+.pnav.collapsed{padding:0;background:transparent;box-shadow:none}
+.pnav.collapsed .pn-av{width:0;margin:0;overflow:hidden}
+.pnav.collapsed .pn-links{max-width:0;opacity:0;pointer-events:none}
+.pnav.collapsed .pn-menu{display:inline-flex;box-shadow:0 14px 40px -14px rgba(0,0,0,.6)}
+.pnav.collapsed .pn-menu:hover,.pnav.drop .pn-menu{background:var(--sun)}
+.pnav.collapsed.drop .pn-links{position:absolute;top:calc(100% + 10px);right:0;flex-direction:column;align-items:stretch;max-width:none;opacity:1;pointer-events:auto;background:var(--lilac);border-radius:22px;padding:8px;min-width:210px;box-shadow:0 20px 50px -16px rgba(0,0,0,.6)}
+.pnav.drop .pn-links a{padding:14px 16px}
+.pnav.drop .pn-links .pn-talk{margin:0}
+@media (max-width:760px){.pnav{top:18px}}
 /* ---------- Hero ---------- */
 .hero{position:relative;min-height:100svh;overflow:hidden;isolation:isolate;
   background:radial-gradient(60vw 60vw at 72% 46%,rgba(101,81,255,.34),transparent 62%),var(--night)}
@@ -366,6 +389,17 @@ img{display:block;max-width:100%}
 </div>
 <div class="follower" aria-hidden="true"></div>
 
+<div class="pnav" id="pnav">
+  <a class="pn-av" href="#top" aria-label="Back to top"><img src="assets/avatar-sm.webp" width="96" height="96" alt=""></a>
+  <nav class="pn-links" aria-label="Main">
+    <a href="#work">Work</a>
+    <a href="#about">About</a>
+    <a href="#experience">Experience</a>
+    <a class="pn-cv" href="assets/Refaat-Elbrawy-CV.pdf" download>Download CV</a>
+    <a class="pn-talk" href="#contact">Let's talk</a>
+  </nav>
+  <button class="pn-menu" id="menuBtn" type="button" aria-expanded="false" aria-label="Open menu"><span class="pn-ic" aria-hidden="true"><i></i><i></i></span>Menu</button>
+</div>
 <div class="mmenu" id="mmenu" hidden>
   <div class="mm-top"><span class="mark">RE</span><button class="mm-close" id="mmClose" type="button" aria-label="Close menu"><span></span><span></span></button></div>
   <nav aria-label="Mobile">
@@ -382,14 +416,6 @@ img{display:block;max-width:100%}
 
   <div class="bar reveal">
     <a class="mark" href="#top" aria-label="RE, Refaat Elbrawy home">RE</a>
-    <nav aria-label="Main">
-      <a href="#work">Work</a>
-      <a href="#about">About</a>
-      <a href="#experience">Experience</a>
-      <a href="assets/Refaat-Elbrawy-CV.pdf" class="cv-top" download>Download CV</a>
-      <a href="#contact" class="talk magnetic">Let's talk</a>
-      <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="mmenu" aria-label="Open menu"><span></span><span></span></button>
-    </nav>
   </div>
 
   <div class="hero-grid">
@@ -742,7 +768,7 @@ img{display:block;max-width:100%}
 
   <div class="ab-foot">
     <div><h4>Education</h4><ul class="side-list"><li><b>Computer Science</b><span>Mansoura University, 2022</span></li><li><b>UX Research</b><span>Udacity FWD, 2022</span></li><li><b>Google UX Design</b><span>Coursera, 2021</span></li></ul></div>
-    <div><h4>Tools I use</h4><div class="tools"><span>Figma</span><span>ProtoPie</span><span>Maze</span><span>Miro</span></div><a class="cv-btn" href="assets/Refaat-Elbrawy-CV.pdf" download>Download my CV <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 4v12M6 11l6 6 6-6M5 20h14"/></svg></a></div>
+    <div><h4>Tools I use</h4><div class="tools"><span>Figma</span><span>ProtoPie</span><span>Maze</span><span>Miro</span></div></div>
   </div>
 </section>
 
@@ -757,9 +783,6 @@ img{display:block;max-width:100%}
     </button>
     <a class="ct-row" href="https://wa.me/201029840986">
       <small>WhatsApp</small><b>+20 102 984 0986</b><span class="ct-act">Message</span>
-    </a>
-    <a class="ct-row" href="assets/Refaat-Elbrawy-CV.pdf" download>
-      <small>Resume</small><b>Download my CV</b><span class="ct-act">PDF</span>
     </a>
   </div>
 </section>
@@ -788,15 +811,38 @@ img{display:block;max-width:100%}
   const tEl = document.getElementById('cairoTime');
   const tick = () => { try { tEl.textContent = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'Africa/Cairo' }).format(new Date()); } catch {} };
   if (tEl) { tick(); setInterval(tick, 30000); }
+
+  /* ---------- Pill nav: open at the top, collapses into "Menu" on scroll ---------- */
+  (() => {
+    const pn = document.getElementById('pnav'); if (!pn) return;
+    const btn = pn.querySelector('.pn-menu'), hasFull = !!document.getElementById('mmenu');
+    let forced = false, forcedY = 0;
+    const mobile = () => innerWidth <= 760;
+    const update = () => {
+      if (forced && Math.abs(scrollY - forcedY) > 260) forced = false;
+      const c = mobile() || (scrollY > 140 && !forced);
+      pn.classList.toggle('collapsed', c);
+      btn.setAttribute('aria-expanded', String(!c || pn.classList.contains('drop')));
+    };
+    btn.addEventListener('click', () => {
+      if (mobile()) { if (hasFull) return; pn.classList.toggle('drop'); update(); return; }
+      forced = true; forcedY = scrollY; update();
+      const first = pn.querySelector('.pn-links a'); if (first) setTimeout(() => first.focus({ preventScroll: true }), 350);
+    });
+    pn.querySelectorAll('.pn-links a').forEach(a => a.addEventListener('click', () => { pn.classList.remove('drop'); forced = false; setTimeout(update, 50); }));
+    document.addEventListener('click', e => { if (pn.classList.contains('drop') && !pn.contains(e.target)) { pn.classList.remove('drop'); update(); } });
+    addEventListener('keydown', e => { if (e.key === 'Escape' && pn.classList.contains('drop')) { pn.classList.remove('drop'); update(); btn.focus(); } });
+    addEventListener('scroll', update, { passive: true }); addEventListener('resize', update); update();
+  })();
   const mb = document.getElementById('menuBtn'), mm = document.getElementById('mmenu');
   const setMenu = open => {
-    mb.setAttribute('aria-expanded', String(open)); mb.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    
     document.body.classList.toggle('menu-open', open);
     if (open) { mm.hidden = false; requestAnimationFrame(() => { mm.classList.add('open'); document.getElementById('mmClose').focus(); }); document.documentElement.style.overflow = 'hidden'; window.__lenis && window.__lenis.stop(); }
     else { mm.classList.remove('open'); document.documentElement.style.overflow = ''; window.__lenis && window.__lenis.start(); setTimeout(() => { if (!mm.classList.contains('open')) mm.hidden = true; }, 700); }
   };
   if (mb) {
-    mb.addEventListener('click', () => setMenu(mb.getAttribute('aria-expanded') !== 'true'));
+    mb.addEventListener('click', () => { if (innerWidth > 760) return; setMenu(!document.getElementById('mmenu').classList.contains('open')); });
     mm.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setMenu(false)));
     document.getElementById('mmClose').addEventListener('click', () => { setMenu(false); mb.focus(); });
     addEventListener('keydown', e => { if (e.key === 'Escape' && mb.getAttribute('aria-expanded') === 'true') { setMenu(false); mb.focus(); } });
@@ -1020,7 +1066,7 @@ img{display:block;max-width:100%}
   /* ---------- Intro ---------- */
   const loader = $('.loader'), num = $('.loader-num');
   gsap.set('.reveal', { visibility: 'visible' });
-  gsap.set(['.bar', '.eyebrow', '.bio', '.actions', '.bands', '.ring'], { opacity: 0 });
+  gsap.set(['.bar', '.pnav', '.eyebrow', '.bio', '.actions', '.bands', '.ring'], { opacity: 0 });
   gsap.set('.headline .line > span', { yPercent: 105 });
   gsap.set('#coin', { scale: 0 });
   gsap.set('.chip', { scale: 0, opacity: 0 });
@@ -1042,7 +1088,7 @@ img{display:block;max-width:100%}
     .to('#coinInner', { rotationY: 0, duration: 1.8, ease: 'power3.out' }, '<')
     .to('.ring', { opacity: 1, duration: 1 }, '<.4')
     .to('.chip', { scale: 1, opacity: 1, duration: .8, stagger: .12, ease: 'back.out(2)' }, '<.2')
-    .to(['.bio', '.actions', '.bar'], { opacity: 1, duration: .8, stagger: .08 }, '<.1')
+    .to(['.bio', '.actions', '.bar', '.pnav'], { opacity: 1, duration: .8, stagger: .08 }, '<.1')
     .to('.bands', { opacity: 1, duration: .8 }, '<.2')
     .to(ptr, { opacity: 1, duration: .4 }, '<')
     .add(() => { pointerLoop(); gsap.delayedCall(1.2, nextWord); });
