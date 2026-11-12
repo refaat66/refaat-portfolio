@@ -55,7 +55,7 @@ strong{color:#fff;font-weight:650}
 .cv-top::after{display:none}
 @media (max-width:600px){.cv-top{display:none}}
 /* ---------- Pill nav ---------- */
-.pnav{position:fixed;top:22px;right:var(--pad);z-index:55;display:flex;align-items:center;gap:4px;background:var(--lilac);color:var(--night);border-radius:999px;padding:6px;box-shadow:0 14px 40px -14px rgba(0,0,0,.6)}
+.pnav{position:fixed;top:22px;right:var(--pad);z-index:55;display:flex;align-items:center;justify-content:flex-end;min-width:112px;min-height:41px;gap:4px;background:var(--lilac);color:var(--night);border-radius:999px;padding:6px;box-shadow:0 14px 40px -14px rgba(0,0,0,.6)}
 .pn-av{flex:none;width:40px;height:40px;border-radius:50%;overflow:hidden;background:var(--violet);transition:width .5s cubic-bezier(.7,0,.2,1),margin .5s}
 .pn-av img{width:100%;height:100%;object-fit:cover;display:block}
 .pn-links{display:flex;align-items:center;gap:2px;overflow:hidden;max-width:760px;transition:max-width .6s cubic-bezier(.7,0,.2,1),opacity .35s}
@@ -482,27 +482,30 @@ strong{color:#fff;font-weight:650}
   const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const bar = $('.bar');
-  /* ---------- Pill nav: open at the top, collapses into "Menu" on scroll ---------- */
+  /* ---------- Pill nav: a "Menu" pill that opens on hover or click ---------- */
   (() => {
     const pn = document.getElementById('pnav'); if (!pn) return;
     const btn = pn.querySelector('.pn-menu'), hasFull = !!document.getElementById('mmenu');
     let forced = false, forcedY = 0;
     const mobile = () => innerWidth <= 760;
     const update = () => {
-      if (forced && Math.abs(scrollY - forcedY) > 260) forced = false;
-      const c = mobile() || (scrollY > 140 && !forced);
+      const c = mobile() || !forced;
       pn.classList.toggle('collapsed', c);
       btn.setAttribute('aria-expanded', String(!c || pn.classList.contains('drop')));
     };
     btn.addEventListener('click', () => {
       if (mobile()) { if (hasFull) return; pn.classList.toggle('drop'); update(); return; }
-      forced = true; forcedY = scrollY; update();
+      forced = true; update();
       const first = pn.querySelector('.pn-links a'); if (first) setTimeout(() => first.focus({ preventScroll: true }), 350);
     });
-    pn.querySelectorAll('.pn-links a').forEach(a => a.addEventListener('click', () => { pn.classList.remove('drop'); forced = false; setTimeout(update, 50); }));
+    pn.querySelectorAll('.pn-links a').forEach(a => a.addEventListener('click', () => { pn.classList.remove('drop'); if (mobile()) setTimeout(update, 50); }));
     document.addEventListener('click', e => { if (pn.classList.contains('drop') && !pn.contains(e.target)) { pn.classList.remove('drop'); update(); } });
     addEventListener('keydown', e => { if (e.key === 'Escape' && pn.classList.contains('drop')) { pn.classList.remove('drop'); update(); btn.focus(); } });
-    addEventListener('scroll', update, { passive: true }); addEventListener('resize', update); update();
+    let closeT;
+    pn.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse' && !mobile()) { clearTimeout(closeT); forced = true; update(); } });
+    pn.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse' && !mobile()) { clearTimeout(closeT); closeT = setTimeout(() => { forced = false; update(); }, 350); } });
+    pn.addEventListener('focusout', e => { if (!mobile() && !pn.contains(e.relatedTarget)) { forced = false; update(); } });
+    addEventListener('resize', update); update();
   })();
 
   const tEl = document.getElementById('cairoTime');
