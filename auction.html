@@ -50,16 +50,10 @@ strong{color:#fff;font-weight:650}
 .talk{border:1.5px solid rgba(238,235,255,.3);border-radius:999px;padding:9px 18px}
 .progress{position:fixed;left:0;top:0;height:3px;width:100%;background:var(--sun);transform-origin:left;transform:scaleX(0);z-index:60}
 
-.snd{display:inline-flex;align-items:center;justify-content:center;gap:3px;width:42px;height:42px;border-radius:50%;border:1.5px solid rgba(238,235,255,.3);background:none;cursor:pointer;padding:0;transition:border-color .2s,background-color .2s}
-.snd:hover{border-color:var(--lilac)}
-.snd span{width:3px;height:4px;border-radius:2px;background:var(--lilac);transition:height .3s}
-.snd[aria-pressed="true"]{background:var(--sun);border-color:var(--sun)}
-.snd[aria-pressed="true"] span{background:var(--night);animation:eq 1s ease-in-out infinite}
-.snd[aria-pressed="true"] span:nth-child(2){animation-delay:-.3s}
-.snd[aria-pressed="true"] span:nth-child(3){animation-delay:-.6s}
-.snd[aria-pressed="true"] span:nth-child(4){animation-delay:-.15s}
-@keyframes eq{0%,100%{height:4px}50%{height:14px}}
-@media (prefers-reduced-motion:reduce){.snd[aria-pressed="true"] span{animation:none;height:10px}}
+.cv-top{display:inline-flex;align-items:center;border-radius:999px;padding:9px 18px;font-weight:600;background:var(--sun);color:var(--night)!important;opacity:1!important;transition:transform .2s}
+.cv-top:hover{transform:translateY(-2px)}
+.cv-top::after{display:none}
+@media (max-width:600px){.cv-top{display:none}}
 /* Hero */
 .c-hero{padding:clamp(130px,18vh,190px) var(--pad) 0}
 .crumb{font-size:15px;color:var(--mute);margin-bottom:24px}
@@ -260,7 +254,7 @@ strong{color:#fff;font-weight:650}
   <a class="mark" href="index.html" aria-label="RE, Refaat Elbrawy home">RE</a>
   <nav aria-label="Case study">
     <a class="back" href="index.html#work" aria-label="All work"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M11 6l-6 6 6 6"/></svg><span>All work</span></a>
-    <button class="snd" id="soundBtn" type="button" aria-pressed="false" aria-label="Turn sound on"><span></span><span></span><span></span><span></span></button>
+      <a href="assets/Refaat-Elbrawy-CV.pdf" class="cv-top" download>Download CV</a>
       <a class="talk" href="index.html#contact">Let's talk</a>
   </nav>
 </header>
@@ -438,7 +432,7 @@ strong{color:#fff;font-weight:650}
 
 
   <section class="next">
-    <a href="index.html#work"><div><small>Keep exploring</small><strong>See all work</strong></div><span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+    <a href="index.html#p-tam"><div><small>Next project</small><strong>Mobile app redesign</strong></div><span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
   </section>
 </main>
 <footer class="foot">
@@ -453,7 +447,6 @@ strong{color:#fff;font-weight:650}
 <script src="js/gsap.min.js"></script>
 <script src="js/ScrollTrigger.min.js"></script>
 <script src="js/lenis.min.js"></script>
-<script src="js/sound.js"></script>
 <script>
 (() => {
   const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];

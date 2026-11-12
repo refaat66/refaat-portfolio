@@ -63,16 +63,6 @@ img{display:block;max-width:100%}
 .follower.on{opacity:1}
 .follower.big{width:76px;height:76px;margin:-38px 0 0 -38px;background:var(--lilac)}
 
-.snd{display:inline-flex;align-items:center;justify-content:center;gap:3px;width:42px;height:42px;border-radius:50%;border:1.5px solid rgba(238,235,255,.3);background:none;cursor:pointer;padding:0;transition:border-color .2s,background-color .2s}
-.snd:hover{border-color:var(--lilac)}
-.snd span{width:3px;height:4px;border-radius:2px;background:var(--lilac);transition:height .3s}
-.snd[aria-pressed="true"]{background:var(--sun);border-color:var(--sun)}
-.snd[aria-pressed="true"] span{background:var(--night);animation:eq 1s ease-in-out infinite}
-.snd[aria-pressed="true"] span:nth-child(2){animation-delay:-.3s}
-.snd[aria-pressed="true"] span:nth-child(3){animation-delay:-.6s}
-.snd[aria-pressed="true"] span:nth-child(4){animation-delay:-.15s}
-@keyframes eq{0%,100%{height:4px}50%{height:14px}}
-@media (prefers-reduced-motion:reduce){.snd[aria-pressed="true"] span{animation:none;height:10px}}
 .menu-btn{display:none;flex-direction:column;justify-content:center;align-items:center;gap:6px;width:46px;height:46px;border-radius:50%;border:1.5px solid rgba(238,235,255,.3);background:none;cursor:pointer;position:relative;z-index:61}
 .menu-btn span{width:18px;height:2px;border-radius:2px;background:var(--lilac);transition:transform .35s cubic-bezier(.7,0,.2,1)}
 .menu-btn[aria-expanded="true"] span:first-child{transform:translateY(4px) rotate(45deg)}
@@ -91,6 +81,9 @@ img{display:block;max-width:100%}
 .mm-close{width:46px;height:46px;border-radius:50%;border:1.5px solid rgba(255,255,255,.5);background:none;cursor:pointer;position:relative}
 .mm-close span{position:absolute;left:13px;top:21px;width:18px;height:2px;background:#fff;transform:rotate(45deg)}
 .mm-close span+span{transform:rotate(-45deg)}
+.cv-top{display:inline-flex;align-items:center;border-radius:999px;padding:9px 18px;font-weight:600;background:var(--sun);color:var(--night)!important;opacity:1!important;transition:transform .2s}
+.cv-top:hover{transform:translateY(-2px)}
+.cv-top::after{display:none}
 /* ---------- Hero ---------- */
 .hero{position:relative;min-height:100svh;overflow:hidden;isolation:isolate;
   background:radial-gradient(60vw 60vw at 72% 46%,rgba(101,81,255,.34),transparent 62%),var(--night)}
@@ -342,7 +335,7 @@ img{display:block;max-width:100%}
   .copy{margin-top:34px}
   .bar nav a:not(.talk){display:none}
   .menu-btn{display:inline-flex}
-  .bar nav .talk{display:none}
+  .bar nav .talk,.bar nav .cv-top{display:none}
   .headline{font-size:clamp(40px,12vw,72px);white-space:normal}
   .pointer{display:none}
   .chip-swatch{display:none}
@@ -378,8 +371,9 @@ img{display:block;max-width:100%}
   <nav aria-label="Mobile">
     <a href="#work"><span>01</span>Work</a>
     <a href="#about"><span>02</span>About</a>
-    <a href="#contact"><span>03</span>Contact</a>
-    <a href="assets/Refaat-Elbrawy-CV.pdf" download><span>04</span>Download CV</a>
+    <a href="#experience"><span>03</span>Experience</a>
+    <a href="#contact"><span>04</span>Contact</a>
+    <a href="assets/Refaat-Elbrawy-CV.pdf" download><span>05</span>Download CV</a>
   </nav>
   <p class="mm-foot">Refaatelbrawy666@gmail.com</p>
 </div>
@@ -391,7 +385,8 @@ img{display:block;max-width:100%}
     <nav aria-label="Main">
       <a href="#work">Work</a>
       <a href="#about">About</a>
-      <button class="snd" id="soundBtn" type="button" aria-pressed="false" aria-label="Turn sound on"><span></span><span></span><span></span><span></span></button>
+      <a href="#experience">Experience</a>
+      <a href="assets/Refaat-Elbrawy-CV.pdf" class="cv-top" download>Download CV</a>
       <a href="#contact" class="talk magnetic">Let's talk</a>
       <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="mmenu" aria-label="Open menu"><span></span><span></span></button>
     </nav>
@@ -418,7 +413,7 @@ img{display:block;max-width:100%}
         <text><textPath href="#circ" textLength="1100">SENIOR PRODUCT DESIGNER ✦ UX RESEARCH ✦ UI DESIGN ✦ BASED IN CAIRO ✦ </textPath></text>
       </svg>
 
-      <div class="coin" id="coin" data-sound="flip" role="button" tabindex="0" aria-pressed="false" aria-label="Flip between my avatar and my photo" data-hover>
+      <div class="coin" id="coin" role="button" tabindex="0" aria-pressed="false" aria-label="Flip between my avatar and my photo" data-hover>
         <div class="coin-tilt" id="coinTilt">
           <div class="coin-inner" id="coinInner">
             <div class="face front"><img src="assets/avatar.webp" width="760" height="760" alt="3D avatar of Refaat wearing round sunglasses and a purple sweater"><img class="lens" src="assets/real.webp" width="760" height="760" alt=""></div>
@@ -444,7 +439,7 @@ img{display:block;max-width:100%}
       </div></div>
 
       <div class="chip chip-toggle" data-depth="0.8"><div class="float b">
-        <button class="tgl" id="tgl" type="button" role="switch" aria-checked="false" data-sound="flip" data-hover><span id="tglLabel">Real one</span> <span class="sw" aria-hidden="true"></span></button>
+        <button class="tgl" id="tgl" type="button" role="switch" aria-checked="false" data-hover><span id="tglLabel">Real one</span> <span class="sw" aria-hidden="true"></span></button>
       </div></div>
 
       <div class="chip chip-note" data-depth="1.4"><div class="float c">
@@ -737,7 +732,7 @@ img{display:block;max-width:100%}
     </div>
   </div>
 
-  <div class="xp">
+  <div class="xp" id="experience">
     <h3 class="xp-h">Experience</h3>
     <div class="xp-row"><div class="xp-when">Nov 2023 – Now</div><div class="xp-who"><h4>Senior Product Designer<span class="xp-now">Now</span></h4><span>NHC-Sakani</span></div><p class="xp-what">User journeys across the Sakani platform: online auctions and their notifications, unit booking for developers, and the online lending journey.</p></div>
     <div class="xp-row"><div class="xp-when">Feb 2023 – Oct 2023</div><div class="xp-who"><h4>Mid Product Designer</h4><span>Innovadigits</span></div><p class="xp-what">Websites and mobile apps for the agency's clients, including TAM in Saudi Arabia.</p></div>
@@ -757,7 +752,7 @@ img{display:block;max-width:100%}
   <p class="ct-sub">I'm open to full-time roles and freelance projects. Tell me what you're building and I'll reply within a day or two.</p>
 
   <div class="ct-rows">
-    <button class="ct-row" type="button" id="ctEmail" data-sound="ding" data-copy="Refaatelbrawy666@gmail.com">
+    <button class="ct-row" type="button" id="ctEmail" data-copy="Refaatelbrawy666@gmail.com">
       <small>Email</small><b>Refaatelbrawy666@gmail.com</b><span class="ct-act" data-idle="Copy">Copy</span>
     </button>
     <a class="ct-row" href="https://wa.me/201029840986">
@@ -781,7 +776,6 @@ img{display:block;max-width:100%}
 <script src="js/gsap.min.js"></script>
 <script src="js/ScrollTrigger.min.js"></script>
 <script src="js/lenis.min.js"></script>
-<script src="js/sound.js"></script>
 <script>
 (() => {
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -924,7 +918,7 @@ img{display:block;max-width:100%}
     if (!fine) label.textContent = 'Tap to meet the real one';
     const toggle = () => { flipped = !flipped; apply(); };
     coin.addEventListener('click', toggle);
-    coin.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); window.reSound && reSound('flip'); } });
+    coin.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); } });
     return { show(real){ if (real !== flipped) toggle(); } };
   }
 
