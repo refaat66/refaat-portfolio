@@ -227,7 +227,8 @@ img{display:block;max-width:100%}
 .rt-hl{position:absolute;top:0;left:0;will-change:transform;height:26px;background:rgba(101,81,255,.35);border-left:1px solid var(--violet);border-right:1px solid var(--violet);pointer-events:none}
 .rt-row{position:absolute;left:0;top:0;height:100%;display:flex;width:max-content;will-change:transform}
 .rt-it{height:100%;display:flex;align-items:center;padding:22px 56px 0}
-.rt-it b{font:800 clamp(30px,3.4vw,52px)/1 var(--display);font-stretch:112%;letter-spacing:-.03em;white-space:nowrap;display:block;color:rgba(238,235,255,.38);transition:color .25s}
+.rt-it b{font:800 clamp(30px,3.4vw,52px)/1 var(--display);font-stretch:108%;letter-spacing:-.03em;white-space:nowrap;display:block;color:rgba(238,235,255,.38);transition:color .25s,font-stretch .7s cubic-bezier(.2,.8,.2,1)}
+.rt.cur-on .rt-it.hot b{font-stretch:132%}
 .rt-it.hot b{color:#fff}
 .rt-guide{position:absolute;left:50%;top:26px;bottom:0;border-left:1px dashed var(--violet);z-index:3;pointer-events:none}
 .rt-gap{position:absolute;left:0;top:0;height:1px;will-change:transform;background:#FF5A7A;z-index:3;pointer-events:none}
@@ -932,8 +933,12 @@ img{display:block;max-width:100%}
       ticks.style.transform = `translate3d(${((x % 1000) + 1000) % 1000 - 1000}px,0,0)`;
       const mid = TW / 2;
       let h = -1;
+      // The selected word widens while the cursor holds it, which pushes its neighbours,
+      // so refresh just the few words around the selection from the live layout
+      if (hi >= 0) for (let j = Math.max(0, hi - 2); j <= Math.min(M.length - 1, hi + 3); j++) { const b = bs[j]; M[j].l = b.offsetLeft; M[j].w = b.offsetWidth; }
       let best = 1e9; for (let k = 0; k < M.length; k++) { const d = Math.abs(x + M[k].l + M[k].w / 2 - mid); if (d < best) { best = d; h = k; } }
-      if (h !== hi) { if (hi >= 0) items[hi].classList.remove('hot'); hi = h; if (hi >= 0) { items[hi].classList.add('hot'); nm.textContent = 'Text / ' + M[hi].n; sz.textContent = `${M[hi].w} × ${M[hi].h}`; } }
+      if (h !== hi) { if (hi >= 0) items[hi].classList.remove('hot'); hi = h; if (hi >= 0) { items[hi].classList.add('hot'); nm.textContent = 'Text / ' + M[hi].n; } }
+      if (hi >= 0) sz.textContent = `${M[hi].w} × ${M[hi].h}`;
       if (hi < 0) return;
       const m = M[hi], bx = x + m.l, by = m.t, bw = m.w, bh = m.h, k = reduce ? 1 : .2;
       if (!S.init) { S.x = bx - 10; S.y = by - 8; S.w = bw + 20; S.h = bh + 16; S.init = true; }
