@@ -272,6 +272,56 @@ strong{color:#fff;font-weight:650}
   .back span{display:none}
 }
 @media (prefers-reduced-motion:reduce){.ask .w{opacity:1}}
+
+/* ---------- Case in 30 seconds ---------- */
+.tldr-head .label{display:flex}
+.tldr-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin-top:clamp(36px,5vh,56px);border-top:1px solid var(--line)}
+.tldr-grid>div{padding:28px 28px 32px 0;border-right:1px solid var(--line)}
+.tldr-grid>div+div{padding-left:28px}
+.tldr-grid>div:last-child{border-right:0}
+.tldr-grid dt{font-family:var(--display);font-weight:700;font-stretch:120%;font-size:15px;color:var(--sun);margin-bottom:12px}
+.tldr-grid dd{font-size:17px;line-height:1.55;color:var(--lilac)}
+.tldr-stats{list-style:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:12px}
+.tldr-stats li{background:rgba(238,235,255,.05);border-radius:24px;padding:28px 28px 26px;display:flex;align-items:baseline;gap:18px}
+.tldr-stats b{font-family:var(--display);font-weight:800;font-stretch:130%;font-size:clamp(56px,6vw,96px);line-height:.85;letter-spacing:-.04em;color:#fff;font-variant-numeric:tabular-nums}
+.tldr-stats span{color:var(--mute);font-size:16px;line-height:1.4;max-width:16ch}
+@media (max-width:1000px){.tldr-grid{grid-template-columns:1fr 1fr}.tldr-grid>div:nth-child(2){border-right:0}.tldr-grid>div:nth-child(3){padding-left:0}.tldr-grid>div:nth-child(n+3){border-top:1px solid var(--line)}}
+@media (max-width:640px){.tldr-grid{grid-template-columns:1fr}.tldr-grid>div{border-right:0;padding:22px 0!important}.tldr-grid>div+div{border-top:1px solid var(--line)}.tldr-stats{grid-template-columns:1fr}}
+
+/* ---------- Before / after ---------- */
+.ba-hint{color:var(--mute);font-size:15px}
+.ba{position:relative;margin-top:clamp(40px,6vh,64px);border-radius:28px;overflow:hidden;aspect-ratio:1200/750;background:#fff;box-shadow:0 40px 80px -40px rgba(0,0,0,.7);user-select:none;-webkit-user-select:none;touch-action:pan-y}
+.ba-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
+.ba-old{position:absolute;inset:0;clip-path:inset(0 calc(100% - var(--pos)) 0 0)}
+.ba-line{position:absolute;top:0;bottom:0;left:var(--pos);width:2px;margin-left:-1px;background:var(--sun);pointer-events:none}
+.ba-knob{position:absolute;top:50%;left:50%;width:56px;height:56px;margin:-28px 0 0 -28px;border-radius:50%;background:var(--sun);color:var(--night);display:grid;place-items:center;box-shadow:0 10px 30px -8px rgba(0,0,0,.5);transition:transform .2s}
+.ba-knob svg{width:24px;height:24px}
+.ba:hover .ba-knob,.ba.drag .ba-knob{transform:scale(1.08)}
+.ba-tag{position:absolute;top:18px;padding:7px 14px;border-radius:999px;font-size:14px;font-weight:600;background:rgba(18,11,46,.82);color:#fff;pointer-events:none;transition:opacity .2s}
+.ba-tag.t-b{left:18px}.ba-tag.t-a{right:18px}
+.ba-range{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:ew-resize;margin:0}
+.ba:has(.ba-range:focus-visible) .ba-knob{outline:3px solid #fff;outline-offset:3px}
+@media (max-width:640px){.ba{border-radius:18px}.ba-knob{width:44px;height:44px;margin:-22px 0 0 -22px}.ba-tag{top:10px;font-size:12px}.ba-tag.t-b{left:10px}.ba-tag.t-a{right:10px}}
+
+/* ---------- Chapter index ---------- */
+.chap{position:fixed;left:var(--pad);bottom:24px;z-index:54;opacity:0;transform:translateY(16px);pointer-events:none;transition:opacity .35s,transform .45s cubic-bezier(.2,.8,.2,1)}
+.chap.show{opacity:1;transform:none;pointer-events:auto}
+.chap-btn{display:flex;align-items:center;gap:10px;height:52px;padding:0 20px 0 8px;border:0;border-radius:999px;background:var(--lilac);color:var(--night);font:600 15px/1 var(--body);cursor:pointer;box-shadow:0 14px 40px -14px rgba(0,0,0,.6);position:relative;overflow:hidden}
+.chap-n{display:grid;place-items:center;width:36px;height:36px;border-radius:50%;background:var(--night);color:var(--sun);font:800 13px/1 var(--display);font-stretch:120%;font-variant-numeric:tabular-nums}
+.chap-t{white-space:nowrap}
+.chap-of{color:rgba(18,11,46,.5);font-weight:500;font-variant-numeric:tabular-nums}
+.chap-bar{position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(18,11,46,.08)}
+.chap-bar i{display:block;height:100%;width:100%;background:var(--violet);transform-origin:left;transform:scaleX(0)}
+.chap-list{position:absolute;left:0;bottom:62px;min-width:260px;list-style:none;padding:8px;border-radius:24px;background:var(--lilac);color:var(--night);box-shadow:0 24px 60px -20px rgba(0,0,0,.7);opacity:0;transform:translateY(10px) scale(.98);transform-origin:bottom left;pointer-events:none;transition:opacity .2s,transform .3s cubic-bezier(.2,.8,.2,1)}
+.chap.open .chap-list{opacity:1;transform:none;pointer-events:auto}
+.chap-list a{display:flex;align-items:center;gap:12px;padding:9px 12px;border-radius:14px;font-size:15px;font-weight:500;color:rgba(18,11,46,.62);transition:background-color .2s,color .2s}
+.chap-list a span{font:700 12px/1 var(--display);font-stretch:120%;width:20px;font-variant-numeric:tabular-nums}
+.chap-list a:hover{background:rgba(101,81,255,.12);color:var(--night)}
+.chap-list a.on{color:var(--night);font-weight:650}
+.chap-list a.on span{color:var(--violet)}
+.chap-list a.done span{color:var(--night)}
+@media (max-width:760px){.chap{left:16px;bottom:16px}.chap-of{display:none}.chap-btn{height:46px;font-size:14px}.chap-n{width:32px;height:32px}}
+@media (prefers-reduced-motion:reduce){.chap,.chap-list{transition:none}}
 </style>
 </head>
 <body>
@@ -305,7 +355,6 @@ strong{color:#fff;font-weight:650}
         <div><dt>Company</dt><dd>NHC-Sakani</dd></div>
         <div><dt>Platforms</dt><dd>Web and mobile</dd></div>
         <div><dt>Year</dt><dd>2025</dd></div>
-        <div style="grid-column:span 2"><dt>What I did</dt><dd>Research, business pitch, user journey, UX and UI, notifications, handoff</dd></div>
       </dl>
     </div>
   </section>
@@ -317,7 +366,22 @@ strong{color:#fff;font-weight:650}
     <div class="cv-phone cv-item" data-speed="18" style="left:80cqw;top:18cqw;rotate:5deg"><img src="assets/auction-map.webp" width="390" height="844" alt="Mobile map view with an auction pin selected"></div>
   </div>
 
-  <section class="sec">
+  <section class="sec tldr" id="ch-summary" data-ch="In 30 seconds" aria-labelledby="tldr-title">
+    <div class="tldr-head"><p class="label"><i></i>The case in 30 seconds</p><h2 class="h2 reveal-h" id="tldr-title">The short version</h2></div>
+    <dl class="tldr-grid">
+      <div class="fade"><dt>Problem</dt><dd>Bidders lost track of where an auction stood, and of what came next. The business only asked for a few fixes.</dd></div>
+      <div class="fade"><dt>What I did</dt><dd>Researched the current auction, benchmarked specialist platforms, pitched a full redesign, then rebuilt the journey end to end.</dd></div>
+      <div class="fade"><dt>Scope</dt><dd>Discovery, joining, live bidding, notifications and every ending, on web and mobile.</dd></div>
+      <div class="fade"><dt>My role</dt><dd>Senior Product Designer: research, business pitch, user journey, UX and UI, handoff.</dd></div>
+    </dl>
+    <ul class="tldr-stats">
+      <li class="fade"><b data-count="3">3</b><span>research steps before the first screen</span></li>
+      <li class="fade"><b data-count="4">4</b><span>auction platforms benchmarked</span></li>
+      <li class="fade"><b data-count="3">3</b><span>journey stages: before, during and after</span></li>
+    </ul>
+  </section>
+
+  <section class="sec" id="ch-context" data-ch="Context">
     <div class="split">
       <div><p class="label"><i></i>Context</p><h2 class="h2 reveal-h">It was meant to be a few small fixes</h2></div>
       <div class="prose fade">
@@ -328,7 +392,7 @@ strong{color:#fff;font-weight:650}
     </div>
   </section>
 
-  <section class="sec">
+  <section class="sec" id="ch-challenge" data-ch="The challenge">
     <div class="greenlight">
       <div>
         <p class="label"><i></i>The challenge</p>
@@ -343,7 +407,7 @@ strong{color:#fff;font-weight:650}
     </div>
   </section>
 
-  <section class="sec">
+  <section class="sec" id="ch-research" data-ch="Research">
     <p class="label"><i></i>Research</p>
     <h2 class="h2 reveal-h" style="max-width:14ch">Before redesigning anything</h2>
     <p class="prose fade" style="margin-top:24px"><span style="color:var(--mute);display:block;max-width:40rem">Once we had the green light I didn't jump into screens. I worked in three steps, and rebuilt the journey end to end before drawing a single UI.</span></p>
@@ -354,7 +418,7 @@ strong{color:#fff;font-weight:650}
     </div>
   </section>
 
-  <section class="ask">
+  <section class="ask" id="ch-found" data-ch="What I found">
     <small>The question that mattered most</small>
     <p id="askText">Was the problem in the interface, or in the experience itself?</p>
   </section>
@@ -372,7 +436,7 @@ strong{color:#fff;font-weight:650}
     </div>
   </section>
 
-  <section class="sec gallery" id="gallery">
+  <section class="sec gallery" id="gallery" data-ch="The design">
     <div class="g-intro"><p class="label"><i></i>The design</p><h2 class="h2 reveal-h">Designing the whole auction</h2></div>
     <div class="g-track" id="gTrack">
       <article class="panel">
@@ -403,7 +467,7 @@ strong{color:#fff;font-weight:650}
   </section>
 
 
-  <section class="sec more" id="more" aria-labelledby="more-title">
+  <section class="sec more" id="more" data-ch="A closer look" aria-labelledby="more-title">
     <div class="more-head">
       <div><p class="label"><i></i>More screens</p><h2 class="h2 reveal-h" id="more-title">A closer look</h2></div>
       <p class="more-intro fade">Pages and states from the full flow, on desktop and mobile. Click any screen to see it larger.</p>
@@ -441,7 +505,21 @@ strong{color:#fff;font-weight:650}
     <figure><img id="lbImg" src="" alt=""><figcaption id="lbCap"></figcaption></figure>
   </div>
 
-  <section class="sec">
+  <section class="sec compare" id="ch-compare" data-ch="Before and after" aria-labelledby="ba-title">
+    <div class="split">
+      <div><p class="label"><i></i>Before and after</p><h2 class="h2 reveal-h" id="ba-title">Same page, new story</h2></div>
+      <div class="prose fade"><p>The auctions list before and after the redesign. The old cards mixed statuses, tags and prices with equal weight. The new list leads with what bidders asked about most: <strong>the auction's status and the time left</strong>.</p><p class="ba-hint">Drag the handle to compare.</p></div>
+    </div>
+    <div class="ba fade" id="ba" style="--pos:50%">
+      <img class="ba-img" src="assets/ba-after.webp" width="1200" height="750" alt="After: auctions grid with Ongoing, Upcoming and Ended tabs and a live countdown on every card" loading="lazy">
+      <div class="ba-old"><img class="ba-img" src="assets/ba-before.webp" width="1200" height="750" alt="Before: the previous auctions list with mixed tags and a large map" loading="lazy"></div>
+      <span class="ba-tag t-b">Before</span><span class="ba-tag t-a">After</span>
+      <div class="ba-line" aria-hidden="true"><span class="ba-knob"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6"/></svg></span></div>
+      <input class="ba-range" type="range" min="0" max="100" value="50" aria-label="Compare before and after: slide left to see more of the new design">
+    </div>
+  </section>
+
+  <section class="sec" id="ch-outcome" data-ch="What changed">
     <div class="outcome">
       <div><p class="label"><i></i>Outcome</p><h2 class="h2 reveal-h">What changed</h2></div>
       <ul class="wins">
@@ -454,7 +532,7 @@ strong{color:#fff;font-weight:650}
     </div>
   </section>
 
-  <section class="sec">
+  <section class="sec" id="ch-closing" data-ch="Closing thoughts">
     <div class="closing">
       <div><p class="label"><i></i>Closing thoughts</p><h2 class="h2 reveal-h">The best thing I designed wasn't a screen</h2></div>
       <div class="prose fade">
@@ -470,6 +548,10 @@ strong{color:#fff;font-weight:650}
     <a href="index.html#p-tam"><div><small>Next project</small><strong>Mobile app redesign</strong></div><span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
   </section>
 </main>
+<nav class="chap" id="chap" aria-label="Chapters">
+  <button class="chap-btn" type="button" aria-expanded="false" aria-controls="chapList"><span class="chap-n" id="chapN">01</span><span class="chap-t" id="chapT">In 30 seconds</span><span class="chap-of" id="chapOf">/ 10</span><span class="chap-bar"><i id="chapBar"></i></span></button>
+  <ol class="chap-list" id="chapList"></ol>
+</nav>
 <footer class="foot">
   <div class="foot-big" id="footBig" aria-hidden="true">Refaat Elbrawy</div>
   <div class="foot-bar">
@@ -538,13 +620,73 @@ strong{color:#fff;font-weight:650}
   addEventListener('keydown', e => { if (e.key === 'Escape' && !lb.hidden) closeLb(); });
   const setH = () => $$('.t-scroll').forEach(sc => sc.style.setProperty('--h', sc.clientHeight + 'px'));
   setH(); addEventListener('resize', setH); addEventListener('load', setH);
+
+  /* ---------- Before / after drag ---------- */
+  (() => {
+    const ba = $('#ba'); if (!ba) return;
+    const range = ba.querySelector('.ba-range');
+    const set = v => { v = Math.max(0, Math.min(100, v)); ba.style.setProperty('--pos', v + '%'); range.value = v; };
+    range.addEventListener('input', () => set(+range.value));
+    const fromX = x => { const r = ba.getBoundingClientRect(); set((x - r.left) / r.width * 100); };
+    let down = false;
+    ba.addEventListener('pointerdown', e => { down = true; ba.classList.add('drag'); fromX(e.clientX); ba.setPointerCapture(e.pointerId); });
+    ba.addEventListener('pointermove', e => { if (down) fromX(e.clientX); });
+    const up = () => { down = false; ba.classList.remove('drag'); };
+    ba.addEventListener('pointerup', up); ba.addEventListener('pointercancel', up);
+    // a one-time nudge so people see it moves
+    if (!reduce && 'IntersectionObserver' in window) {
+      const io = new IntersectionObserver(es => { if (es[0].isIntersecting) { io.disconnect();
+        let t0 = null; const step = ts => { if (down) return; t0 ??= ts; const k = Math.min(1, (ts - t0) / 1400); set(50 + Math.sin(k * Math.PI * 2) * 14 * (1 - k)); if (k < 1) requestAnimationFrame(step); };
+        setTimeout(() => requestAnimationFrame(step), 400); } }, { threshold: .6 });
+      io.observe(ba);
+    }
+  })();
+
+  /* ---------- Chapter index ---------- */
+  (() => {
+    const chap = $('#chap'); if (!chap) return;
+    const secs = $$('[data-ch]'), list = $('#chapList'), btn = chap.querySelector('.chap-btn');
+    const pad = n => String(n).padStart(2, '0');
+    $('#chapOf').textContent = '/ ' + pad(secs.length);
+    list.innerHTML = secs.map((s, i) => `<li><a href="#${s.id}"><span>${pad(i + 1)}</span>${s.dataset.ch}</a></li>`).join('');
+    const links = [...list.querySelectorAll('a')];
+    let cur = -1, closeT;
+    const setOpen = v => { chap.classList.toggle('open', v); btn.setAttribute('aria-expanded', String(v)); };
+    const update = () => {
+      const mid = innerHeight * .45;
+      let i = -1; secs.forEach((s, k) => { if (s.getBoundingClientRect().top <= mid) i = k; });
+      const footTop = $('.next').getBoundingClientRect().top;
+      chap.classList.toggle('show', i >= 0 && footTop > innerHeight * .7);
+      if (!chap.classList.contains('show')) setOpen(false);
+      if (i < 0) i = 0;
+      if (i !== cur) {
+        cur = i; $('#chapN').textContent = pad(i + 1); $('#chapT').textContent = secs[i].dataset.ch;
+        links.forEach((a, k) => { a.classList.toggle('on', k === i); a.classList.toggle('done', k < i); if (k === i) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current'); });
+      }
+      const s = secs[i], r = s.getBoundingClientRect(), nxt = secs[i + 1] ? secs[i + 1].getBoundingClientRect().top : r.bottom;
+      const p = Math.max(0, Math.min(1, (mid - r.top) / Math.max(1, nxt - r.top)));
+      $('#chapBar').style.transform = `scaleX(${p})`;
+    };
+    let raf = 0; const onS = () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; update(); }); };
+    addEventListener('scroll', onS, { passive: true }); addEventListener('resize', onS); update();
+    btn.addEventListener('click', () => setOpen(!chap.classList.contains('open')));
+    chap.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') { clearTimeout(closeT); setOpen(true); } });
+    chap.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse') closeT = setTimeout(() => setOpen(false), 280); });
+    chap.addEventListener('focusout', e => { if (!chap.contains(e.relatedTarget)) setOpen(false); });
+    addEventListener('keydown', e => { if (e.key === 'Escape' && chap.classList.contains('open')) { setOpen(false); btn.focus(); } });
+    links.forEach((a, k) => a.addEventListener('click', e => {
+      e.preventDefault(); setOpen(false);
+      const el = secs[k];
+      if (window.__lenis) window.__lenis.scrollTo(el, { offset: -20, duration: 1.2 }); else el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' });
+    }));
+  })();
   // Split the big question into words for the scroll fill
   const ask = $('#askText');
   ask.innerHTML = ask.textContent.split(' ').map(w => `<span class="w">${w}</span>`).join(' ');
 
   if (!window.gsap || reduce) { $$('.ask .w').forEach(w => w.style.opacity = 1); return; }
   gsap.registerPlugin(ScrollTrigger);
-  const lenis = new Lenis({ lerp: .1 });
+  const lenis = new Lenis({ lerp: .1 }); window.__lenis = lenis;
   lenis.on('scroll', ScrollTrigger.update);
   gsap.ticker.add(t => lenis.raf(t * 1000)); gsap.ticker.lagSmoothing(0);
 
@@ -564,6 +706,7 @@ strong{color:#fff;font-weight:650}
   });
   $$('.sec .fade, .wins .fade').forEach(el => gsap.from(el, { opacity: 0, y: 40, duration: .9, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 88%' } }));
 
+  $$('.tldr-stats b').forEach(b => { const o = { v: 0 }; gsap.to(o, { v: +b.dataset.count, duration: 1.2, ease: 'power2.out', snap: { v: 1 }, onUpdate: () => b.textContent = o.v, scrollTrigger: { trigger: b, start: 'top 90%' } }); });
   // The question fills word by word as you scroll
   gsap.from('.tile', { y: 60, opacity: 0, duration: 1, stagger: .08, ease: 'power3.out', scrollTrigger: { trigger: '.bento', start: 'top 85%' } });
   gsap.to('.ask .w', { opacity: 1, stagger: .1, ease: 'none', scrollTrigger: { trigger: '.ask', start: 'top 70%', end: 'bottom 60%', scrub: .5 } });
