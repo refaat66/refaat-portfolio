@@ -275,18 +275,14 @@ strong{color:#fff;font-weight:650}
 
 /* ---------- Case in 30 seconds ---------- */
 .tldr-head .label{display:flex}
-.tldr-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin-top:clamp(36px,5vh,56px);border-top:1px solid var(--line)}
+.tldr-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin-top:clamp(36px,5vh,56px);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
 .tldr-grid>div{padding:28px 28px 32px 0;border-right:1px solid var(--line)}
 .tldr-grid>div+div{padding-left:28px}
 .tldr-grid>div:last-child{border-right:0}
 .tldr-grid dt{font-family:var(--display);font-weight:700;font-stretch:120%;font-size:15px;color:var(--sun);margin-bottom:12px}
 .tldr-grid dd{font-size:17px;line-height:1.55;color:var(--lilac)}
-.tldr-stats{list-style:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:12px}
-.tldr-stats li{background:rgba(238,235,255,.05);border-radius:24px;padding:28px 28px 26px;display:flex;align-items:baseline;gap:18px}
-.tldr-stats b{font-family:var(--display);font-weight:800;font-stretch:130%;font-size:clamp(56px,6vw,96px);line-height:.85;letter-spacing:-.04em;color:#fff;font-variant-numeric:tabular-nums}
-.tldr-stats span{color:var(--mute);font-size:16px;line-height:1.4;max-width:16ch}
 @media (max-width:1000px){.tldr-grid{grid-template-columns:1fr 1fr}.tldr-grid>div:nth-child(2){border-right:0}.tldr-grid>div:nth-child(3){padding-left:0}.tldr-grid>div:nth-child(n+3){border-top:1px solid var(--line)}}
-@media (max-width:640px){.tldr-grid{grid-template-columns:1fr}.tldr-grid>div{border-right:0;padding:22px 0!important}.tldr-grid>div+div{border-top:1px solid var(--line)}.tldr-stats{grid-template-columns:1fr}}
+@media (max-width:640px){.tldr-grid{grid-template-columns:1fr}.tldr-grid>div{border-right:0;padding:22px 0!important}.tldr-grid>div+div{border-top:1px solid var(--line)}}
 
 /* ---------- Before / after ---------- */
 .ba-hint{color:var(--mute);font-size:15px}
@@ -387,11 +383,6 @@ strong{color:#fff;font-weight:650}
       <div class="fade"><dt>Scope</dt><dd>Discovery, joining, live bidding, notifications and every ending, on web and mobile.</dd></div>
       <div class="fade"><dt>My role</dt><dd>Senior Product Designer: research, business pitch, user journey, UX and UI, handoff.</dd></div>
     </dl>
-    <ul class="tldr-stats">
-      <li class="fade"><b data-count="3">3</b><span>research steps before the first screen</span></li>
-      <li class="fade"><b data-count="4">4</b><span>auction platforms benchmarked</span></li>
-      <li class="fade"><b data-count="3">3</b><span>journey stages: before, during and after</span></li>
-    </ul>
   </section>
 
   <section class="sec" id="ch-context" data-ch="Context">
@@ -741,7 +732,6 @@ strong{color:#fff;font-weight:650}
   });
   $$('.sec .fade, .wins .fade').forEach(el => gsap.from(el, { opacity: 0, y: 40, duration: .9, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 88%' } }));
 
-  $$('.tldr-stats b').forEach(b => { const o = { v: 0 }; gsap.to(o, { v: +b.dataset.count, duration: 1.2, ease: 'power2.out', snap: { v: 1 }, onUpdate: () => b.textContent = o.v, scrollTrigger: { trigger: b, start: 'top 90%' } }); });
   // The question fills word by word as you scroll
   gsap.from('.tile', { y: 60, opacity: 0, duration: 1, stagger: .08, ease: 'power3.out', scrollTrigger: { trigger: '.bento', start: 'top 85%' } });
   gsap.to('.ask .w', { opacity: 1, stagger: .1, ease: 'none', scrollTrigger: { trigger: '.ask', start: 'top 70%', end: 'bottom 60%', scrub: .5 } });
