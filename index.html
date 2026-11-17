@@ -807,9 +807,9 @@ img{display:block;max-width:100%}
   <p class="ct-sub">I'm open to full-time roles and freelance projects. Tell me what you're building and I'll reply within a day or two.</p>
 
   <div class="ct-rows">
-    <button class="ct-row" type="button" id="ctEmail" data-copy="Refaatelbrawy666@gmail.com">
-      <small>Email</small><b>Refaatelbrawy666@gmail.com</b><span class="ct-act" data-idle="Copy">Copy</span>
-    </button>
+    <a class="ct-row" href="mailto:Refaatelbrawy666@gmail.com">
+      <small>Email</small><b>Refaatelbrawy666@gmail.com</b><span class="ct-act">Send email</span>
+    </a>
     <a class="ct-row" href="https://wa.me/201029840986">
       <small>WhatsApp</small><b>+20 102 984 0986</b><span class="ct-act">Message</span>
     </a>
@@ -835,8 +835,6 @@ img{display:block;max-width:100%}
   const $ = s => document.querySelector(s);
   const $$ = s => [...document.querySelectorAll(s)];
   const hero = $('.hero');
-  const ce = document.getElementById('ctEmail');
-  if (ce) ce.addEventListener('click', async () => { const act = ce.querySelector('.ct-act'); try { await navigator.clipboard.writeText(ce.dataset.copy); act.textContent = 'Copied'; } catch { act.textContent = 'Select it'; } setTimeout(() => act.textContent = 'Copy', 2400); });
   const tEl = document.getElementById('cairoTime');
   const tick = () => { try { tEl.textContent = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'Africa/Cairo' }).format(new Date()); } catch {} };
   if (tEl) { tick(); setInterval(tick, 30000); }
