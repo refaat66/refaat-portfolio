@@ -1116,7 +1116,7 @@ img{display:block;max-width:100%}
     el.classList.add('press'); action(); await sleep(.16); el.classList.remove('press');
   }
   // Glide to a target that may be moving (the tape keeps scrolling)
-  function chase(getT, dur = 1.2){
+  function chase(getT, dur = .75){
     return new Promise(r => {
       const sx = gsap.getProperty(ptr, 'x'), sy = gsap.getProperty(ptr, 'y'), o = { p: 0 };
       gsap.to(o, { p: 1, duration: dur, ease: 'power2.inOut', onUpdate: () => { const t = getT(); gsap.set(ptr, { x: sx + (t.x - 3 - sx) * o.p, y: sy + (t.y - 3 - sy) * o.p }); }, onComplete: r });
@@ -1131,29 +1131,29 @@ img{display:block;max-width:100%}
     while (true) {
       await wait();
       // 1. Flip to the real photo
-      await moveTo(posOf(tgl, .82, .5), 1.1);
+      await moveTo(posOf(tgl, .82, .5), .6);
       if (tgl.getAttribute('aria-checked') !== 'true') await press(tgl, () => tgl.click());
-      await sleep(1.6);
+      await sleep(.9);
       // 2. Work through the design process
       for (const c of chks()) {
         await wait();
         if (c.getAttribute('aria-pressed') === 'true') continue;
-        await moveTo(posOf(c, .12, .55), .9); await press(c, () => setChk(c, true)); await sleep(.7);
+        await moveTo(posOf(c, .12, .55), .5); await press(c, () => setChk(c, true)); await sleep(.35);
       }
-      await sleep(.8);
+      await sleep(.4);
       // 3. Down to the ruler tape, ride the selection for a while
       await wait();
       if (window.__rt && window.__rt.visible()) {
-        await chase(tapeTarget, 1.3);
-        window.__rt.ride(true); await sleep(5.5); window.__rt.ride(false);
+        await chase(tapeTarget, .8);
+        window.__rt.ride(true); await sleep(4); window.__rt.ride(false);
         gsap.set(ptr, (() => { const t = tapeTarget(); return { x: t.x - 3, y: t.y - 3 }; })());
       }
       // Back up, tidy the board and reset for the next round
       await wait();
-      await moveTo(idle(), 1.2); await sleep(.4);
-      for (const c of chks().slice(1).reverse()) { setChk(c, false); await sleep(.12); }
-      await moveTo(posOf(tgl, .82, .5), 1); if (tgl.getAttribute('aria-checked') === 'true') await press(tgl, () => tgl.click());
-      await sleep(1.6);
+      await moveTo(idle(), .7); await sleep(.2);
+      for (const c of chks().slice(1).reverse()) { setChk(c, false); await sleep(.08); }
+      await moveTo(posOf(tgl, .82, .5), .6); if (tgl.getAttribute('aria-checked') === 'true') await press(tgl, () => tgl.click());
+      await sleep(.9);
     }
   }
 
