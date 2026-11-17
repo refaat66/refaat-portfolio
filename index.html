@@ -217,7 +217,7 @@ img{display:block;max-width:100%}
 .pointer span{margin-top:16px;background:var(--sun);color:var(--night);font-weight:700;font-size:12px;padding:4px 9px;border-radius:999px 999px 999px 4px}
 
 /* ---------- Ruler tape (replaces the crossed marquee bands; old version: git tag bands-crossed-v1) ---------- */
-.bands{position:relative;margin-top:8px}
+.bands{position:relative;margin-top:clamp(56px,9vh,110px)}
 .rt{position:relative;height:150px;overflow:hidden;cursor:grab;touch-action:pan-y;user-select:none;-webkit-user-select:none;background:#1B1440;color:var(--lilac);border-top:1px solid rgba(238,235,255,.14);border-bottom:1px solid rgba(238,235,255,.14)}
 .rt.drag{cursor:grabbing}
 .rt-ruler{position:absolute;left:0;right:0;top:0;height:26px;background:#241B52;border-bottom:1px solid rgba(238,235,255,.28);overflow:hidden;z-index:2}
@@ -248,7 +248,7 @@ img{display:block;max-width:100%}
 
 
 /* ---------- About ---------- */
-.about{position:relative;padding:clamp(90px,14vh,160px) var(--pad) clamp(80px,12vh,140px);border-top:1px solid rgba(238,235,255,.1)}
+.about{position:relative;padding:clamp(130px,20vh,240px) var(--pad) clamp(110px,16vh,200px);border-top:1px solid rgba(238,235,255,.1)}
 .ab-kicker{display:inline-flex;align-items:center;gap:10px;font-size:15px;color:var(--sun);font-weight:600;margin-bottom:24px}
 .ab-kicker i{width:22px;height:2px;background:var(--sun)}
 .ab-top{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:clamp(40px,7vw,120px);align-items:end}
@@ -288,7 +288,7 @@ img{display:block;max-width:100%}
 .stat small{display:block;margin-top:10px;color:var(--mute);font-size:16px}
 
 /* What I bring: sticky number that swaps */
-.bring{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.2fr);gap:clamp(32px,6vw,110px);margin-top:clamp(100px,16vh,180px)}
+.bring{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.2fr);gap:clamp(32px,6vw,110px);margin-top:clamp(160px,26vh,300px)}
 .bring-num{position:sticky;top:18vh;align-self:start;height:min(56vh,440px)}
 .bring-num small{display:block;color:var(--sun);font-weight:600;font-size:15px;margin-bottom:12px}
 .bring-num .digits{position:relative;height:1em;overflow:hidden;font-family:var(--display);font-weight:900;font-stretch:130%;font-size:clamp(140px,22vw,340px);line-height:1;letter-spacing:-.06em;color:var(--violet)}
@@ -393,7 +393,7 @@ img{display:block;max-width:100%}
   .chip-note{left:70%;top:84%}
   .note{width:118px;font-size:13px;padding:10px 10px 12px}
   .ring text{font-size:15.5px}
-  .bands{margin-top:20px}
+  .bands{margin-top:56px}
   .rt{height:124px}
   .rt-it{padding:20px 36px 0}
   .rt-it b{font-size:28px}
@@ -514,7 +514,7 @@ img{display:block;max-width:100%}
 
 <style>
 /* ---------- Selected work ---------- */
-.work{position:relative;padding:clamp(80px,12vh,140px) var(--pad) clamp(80px,12vh,160px)}
+.work{position:relative;padding:clamp(130px,20vh,240px) var(--pad) clamp(130px,20vh,240px)}
 .work-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:clamp(40px,7vh,80px)}
 .work-title{font-family:var(--display);font-weight:800;font-stretch:118%;font-size:clamp(48px,8.4vw,150px);line-height:.9;letter-spacing:-.045em}
 .work-title .line{display:block;overflow:hidden}
@@ -919,7 +919,7 @@ img{display:block;max-width:100%}
     window.__rt = {
       cur: () => { const r = tape.getBoundingClientRect(); return { x: r.left + S.x + S.w - 6, y: r.top + S.y + S.h - 4 }; },
       ride: v => { forced = v; sync(); },
-      visible: () => { const r = tape.getBoundingClientRect(); return r.bottom > 0 && r.top < innerHeight - 40; }
+      visible: () => { const r = tape.getBoundingClientRect(); return r.top > 0 && r.bottom < innerHeight + 4; }
     };
     addEventListener('scroll', checkSec, { passive: true }); addEventListener('resize', checkSec); checkSec();
     const frame = () => {
