@@ -216,15 +216,33 @@ img{display:block;max-width:100%}
 .pointer svg{width:22px;height:22px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.4))}
 .pointer span{margin-top:16px;background:var(--sun);color:var(--night);font-weight:700;font-size:12px;padding:4px 9px;border-radius:999px 999px 999px 4px}
 
-/* ---------- Marquee ---------- */
-.bands{position:relative;height:140px;margin-top:-10px}
-.band{position:absolute;left:-5%;right:-5%;top:50%;overflow:hidden;padding:16px 0;white-space:nowrap}
-.band-a{background:var(--violet);color:#fff;transform:translateY(-50%) rotate(-2.6deg);z-index:2}
-.band-b{background:var(--lilac);color:var(--night);transform:translateY(-50%) rotate(2.2deg);z-index:1}
-.track{display:inline-flex;will-change:transform}
-.track span{font-family:var(--display);font-weight:800;font-stretch:118%;font-size:clamp(22px,2.6vw,38px);letter-spacing:-.02em;padding-right:.9em}
-.track span::after{content:"✦";padding-left:.9em;font-size:.7em;vertical-align:.12em;color:var(--sun)}
-.band-b .track span::after{color:var(--violet)}
+/* ---------- Ruler tape (replaces the crossed marquee bands; old version: git tag bands-crossed-v1) ---------- */
+.bands{position:relative;margin-top:8px}
+.rt{position:relative;height:150px;overflow:hidden;cursor:grab;touch-action:pan-y;user-select:none;-webkit-user-select:none;background:#1B1440;color:var(--lilac);border-top:1px solid rgba(238,235,255,.14);border-bottom:1px solid rgba(238,235,255,.14)}
+.rt.drag{cursor:grabbing}
+.rt-ruler{position:absolute;left:0;right:0;top:0;height:26px;background:#241B52;border-bottom:1px solid rgba(238,235,255,.28);overflow:hidden;z-index:2}
+.rt-ticks{position:absolute;left:0;top:0;height:26px;width:200%}
+.rt-tk{position:absolute;top:0;height:26px;border-left:1px solid rgba(238,235,255,.28);font:500 10px/1 var(--body);color:rgba(238,235,255,.55);padding:4px 0 0 4px}
+.rt-tk.m{height:7px;top:19px;padding:0;opacity:.7}
+.rt-hl{position:absolute;top:0;height:26px;background:rgba(101,81,255,.35);border-left:1px solid var(--violet);border-right:1px solid var(--violet);pointer-events:none}
+.rt-row{position:absolute;left:0;top:0;height:100%;display:flex;width:max-content;will-change:transform}
+.rt-it{height:100%;display:flex;align-items:center;padding:22px 56px 0}
+.rt-it b{font:800 clamp(30px,3.4vw,52px)/1 var(--display);font-stretch:var(--fs,105%);letter-spacing:-.03em;white-space:nowrap;display:block;color:rgba(238,235,255,.38);transition:color .25s}
+.rt-it.hot b{color:#fff}
+.rt-guide{position:absolute;left:50%;top:26px;bottom:0;border-left:1px dashed var(--violet);z-index:3;pointer-events:none}
+.rt-gap{position:absolute;height:1px;background:#FF5A7A;z-index:3;pointer-events:none}
+.rt-gap::before,.rt-gap::after{content:"";position:absolute;top:-6px;width:1px;height:13px;background:#FF5A7A}
+.rt-gap::before{left:0}.rt-gap::after{right:0}
+.rt-gap span{position:absolute;left:50%;top:-26px;transform:translateX(-50%);font:700 11px/1 var(--body);background:#FF5A7A;color:#fff;padding:4px 6px;border-radius:4px}
+.rt-sel{position:absolute;border:1.5px solid var(--violet);pointer-events:none;z-index:3}
+.rt-sel i{position:absolute;width:9px;height:9px;background:#1B1440;border:1.5px solid var(--violet)}
+.rt-sel i:nth-child(1){left:-5px;top:-5px}.rt-sel i:nth-child(2){right:-5px;top:-5px}.rt-sel i:nth-child(3){left:-5px;bottom:-5px}.rt-sel i:nth-child(4){right:-5px;bottom:-5px}
+.rt-sel i:nth-child(5){left:calc(50% - 4.5px);top:-5px}.rt-sel i:nth-child(6){left:calc(50% - 4.5px);bottom:-5px}.rt-sel i:nth-child(7){left:-5px;top:calc(50% - 4.5px)}.rt-sel i:nth-child(8){right:-5px;top:calc(50% - 4.5px)}
+.rt-sel .nm{position:absolute;left:-1.5px;top:-24px;font:600 11px/1 var(--body);color:#A99CFF;white-space:nowrap}
+.rt-sel .sz{position:absolute;left:50%;bottom:-30px;transform:translateX(-50%);font:600 12px/1 var(--body);background:var(--violet);color:#fff;padding:5px 8px;border-radius:4px;white-space:nowrap}
+.rt-cur{position:absolute;z-index:4;pointer-events:none;display:flex;align-items:flex-start;gap:2px;transition:opacity .3s}
+.rt-cur svg{width:20px;height:20px}
+.rt-cur span{background:var(--sun);color:var(--night);font:700 11px/1 var(--body);padding:4px 7px;border-radius:999px;margin-top:14px}
 
 
 /* ---------- About ---------- */
@@ -373,7 +391,10 @@ img{display:block;max-width:100%}
   .chip-note{left:70%;top:84%}
   .note{width:118px;font-size:13px;padding:10px 10px 12px}
   .ring text{font-size:15.5px}
-  .bands{height:120px;margin-top:20px}
+  .bands{margin-top:20px}
+  .rt{height:124px}
+  .rt-it{padding:20px 36px 0}
+  .rt-it b{font-size:28px}
   .follower{display:none}
 }
 @media (prefers-reduced-motion:reduce){
@@ -485,8 +506,7 @@ img{display:block;max-width:100%}
   </div>
 
   <div class="bands reveal" aria-hidden="true">
-    <div class="band band-b"><div class="track" data-dir="1"></div></div>
-    <div class="band band-a"><div class="track" data-dir="-1"></div></div>
+    <div class="rt" id="rtape"></div>
   </div>
 </header>
 
@@ -863,14 +883,55 @@ img{display:block;max-width:100%}
   let heroVisible = true;
   new IntersectionObserver(([e]) => heroVisible = e.isIntersecting).observe(hero);
 
-  /* ---------- Marquee content ---------- */
-  const skillsA = ['User research','Information architecture','User flows','Wireframing','Prototyping','Design systems','Usability testing','UI design'];
-  const skillsB = ['Product thinking','Interaction design','Accessibility','Design QA','Handoff','Figma','ProtoPie','Maze','Miro'];
-  $$('.track').forEach((t,i) => {
-    const list = i === 0 ? skillsB : skillsA;
-    const html = list.map(s => `<span>${s}</span>`).join('');
-    t.innerHTML = html + html + html;
-  });
+  /* ---------- Ruler tape: dark tape, centre guide, redlines and a gliding selection ---------- */
+  (() => {
+    const tape = $('#rtape'); if (!tape) return;
+    const list = ['User research','Information architecture','User flows','Wireframing','Prototyping','Design systems','Usability testing','Accessibility','Design QA','Handoff'];
+    tape.innerHTML = '<div class="rt-ruler"><div class="rt-ticks"></div><div class="rt-hl"></div></div><div class="rt-row"></div><div class="rt-guide"></div><div class="rt-gap"><span></span></div><div class="rt-gap"><span></span></div><div class="rt-sel"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="nm"></span><span class="sz"></span></div><div class="rt-cur"><svg viewBox="0 0 24 24"><path d="M4 2l16 9.5-7 1.6-3.4 6.9z" fill="#FFE14D" stroke="#120B2E" stroke-width="1.5" stroke-linejoin="round"/></svg><span>Refaat</span></div>';
+    const ticks = tape.querySelector('.rt-ticks'), row = tape.querySelector('.rt-row'), hl = tape.querySelector('.rt-hl'), sel = tape.querySelector('.rt-sel'), cur = tape.querySelector('.rt-cur');
+    const [gl, gr] = tape.querySelectorAll('.rt-gap'), nm = sel.querySelector('.nm'), sz = sel.querySelector('.sz');
+    let t = ''; for (let i = 0; i < 80; i++) { t += `<span class="rt-tk" style="left:${i*100}px">${i*100}</span>`; for (let j = 1; j < 10; j++) t += `<span class="rt-tk m" style="left:${i*100+j*10}px"></span>`; }
+    ticks.innerHTML = t;
+    row.innerHTML = list.map(x => `<div class="rt-it"><b>${x}</b></div>`).join('').repeat(3);
+    const items = [...row.children], bs = items.map(it => it.firstChild);
+    const lerp = (a, b, k) => a + (b - a) * k;
+    let x = 0, v = -.8, dragging = false, lx = 0, tv = 0, lastY = scrollY;
+    const S = { x: 0, y: 0, w: 0, h: 0, init: false };
+    tape.addEventListener('pointerdown', e => { dragging = true; lx = e.clientX; tv = 0; tape.classList.add('drag'); tape.setPointerCapture(e.pointerId); });
+    tape.addEventListener('pointermove', e => { if (!dragging) return; const d = e.clientX - lx; lx = e.clientX; x += d; tv = d; });
+    const end = () => { if (!dragging) return; dragging = false; tape.classList.remove('drag'); v = Math.max(-40, Math.min(40, tv)); };
+    tape.addEventListener('pointerup', end); tape.addEventListener('pointercancel', end);
+    const frame = () => {
+      requestAnimationFrame(frame);
+      if (!heroVisible || document.hidden) return;
+      const w = row.scrollWidth / 3; if (!w) return;
+      const dy = Math.abs(scrollY - lastY); lastY = scrollY;
+      if (!dragging && !reduce) { v = lerp(v, -.8 - Math.min(dy * .12, 5), .05); x += v; }
+      if (x <= -w) x += w; if (x > 0) x -= w;
+      row.style.transform = `translate3d(${x}px,0,0)`;
+      ticks.style.transform = `translate3d(${((x % 1000) + 1000) % 1000 - 1000}px,0,0)`;
+      const mid = tape.offsetWidth / 2;
+      let hi = -1;
+      items.forEach((it, k) => {
+        const l = it.offsetLeft + x, r = l + it.offsetWidth, on = l < mid && r > mid;
+        it.classList.toggle('hot', on); if (on) hi = k;
+        const d = Math.min(1, Math.abs(l + it.offsetWidth / 2 - mid) / (tape.offsetWidth * .35));
+        bs[k].style.setProperty('--fs', (125 - d * 25) + '%');
+      });
+      if (hi < 0) return;
+      const b = bs[hi], bx = x + b.offsetLeft, by = b.offsetTop, bw = b.offsetWidth, bh = b.offsetHeight, k = reduce ? 1 : .14;
+      if (!S.init) { S.x = bx - 10; S.y = by - 8; S.w = bw + 20; S.h = bh + 16; S.init = true; }
+      S.x = lerp(S.x, bx - 10, k); S.y = lerp(S.y, by - 8, k); S.w = lerp(S.w, bw + 20, k); S.h = lerp(S.h, bh + 16, k);
+      sel.style.cssText = `left:${S.x}px;top:${S.y}px;width:${S.w}px;height:${S.h}px`;
+      nm.textContent = 'Text / ' + b.textContent; sz.textContent = `${Math.round(bw)} × ${Math.round(bh)}`;
+      hl.style.cssText = `left:${S.x}px;width:${S.w}px`;
+      cur.style.left = (S.x + S.w - 6) + 'px'; cur.style.top = (S.y + S.h - 4) + 'px'; cur.style.opacity = dragging ? 0 : 1;
+      const y = by + bh / 2, prev = bs[hi - 1], next = bs[hi + 1];
+      if (prev) { const pr = x + prev.offsetLeft + prev.offsetWidth; gl.style.cssText = `display:block;left:${pr}px;top:${y}px;width:${Math.max(0, S.x - pr)}px`; gl.firstChild.textContent = Math.round(bx - pr); } else gl.style.display = 'none';
+      if (next) { const rs = S.x + S.w, nl = x + next.offsetLeft; gr.style.cssText = `display:block;left:${rs}px;top:${y}px;width:${Math.max(0, nl - rs)}px`; gr.firstChild.textContent = Math.round(nl - (bx + bw)); } else gr.style.display = 'none';
+    };
+    requestAnimationFrame(frame);
+  })();
 
   /* ---------- Fallback: no GSAP or reduced motion ---------- */
   if (!window.gsap || reduce) {
@@ -1060,21 +1121,6 @@ img{display:block;max-width:100%}
       } else { for (const c of chks().slice(1)) setChk(c, false); }
     }
   }
-
-  /* ---------- Marquee, nudged by scroll speed ---------- */
-  $$('.track').forEach(t => {
-    const dir = +t.dataset.dir;
-    const w = () => t.scrollWidth / 3;
-    let x = dir < 0 ? 0 : -w();
-    gsap.ticker.add(() => {
-      if (!heroVisible) return;
-      const boost = 1 + Math.min(Math.abs(lenis.velocity) * .25, 6);
-      x += dir * .6 * boost;
-      const ww = w();
-      if (x <= -ww) x += ww; if (x > 0) x -= ww;
-      t.style.transform = `translate3d(${x}px,0,0)`;
-    });
-  });
 
   /* ---------- Intro ---------- */
   const loader = $('.loader'), num = $('.loader-num');
