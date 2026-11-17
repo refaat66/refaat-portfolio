@@ -322,6 +322,19 @@ strong{color:#fff;font-weight:650}
 .chap-list a.done span{color:var(--night)}
 @media (max-width:760px){.chap{left:16px;bottom:16px}.chap-of{display:none}.chap-btn{height:46px;font-size:14px}.chap-n{width:32px;height:32px}}
 @media (prefers-reduced-motion:reduce){.chap,.chap-list{transition:none}}
+
+/* ---------- KPIs and lessons ---------- */
+.kpis{list-style:none;margin-top:clamp(40px,6vh,64px)}
+.kpis li{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr) minmax(0,1fr);gap:clamp(20px,4vw,64px);align-items:baseline;padding:30px 0;border-top:1px solid var(--line)}
+.kpis li:last-child{border-bottom:1px solid var(--line)}
+.kpis b{font-family:var(--display);font-weight:800;font-stretch:115%;font-size:clamp(24px,2.4vw,36px);line-height:1.05;letter-spacing:-.03em;color:#fff}
+.kpis span{font-size:18px;color:var(--lilac)}
+.kpis em{font-style:normal;font-size:15px;color:var(--mute)}
+.lessons{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(24px,4vw,56px);margin-top:clamp(40px,6vh,64px)}
+.lessons>div{border-top:2px solid var(--sun);padding-top:24px}
+.lessons h3{font-family:var(--display);font-weight:750;font-stretch:115%;font-size:clamp(22px,1.9vw,28px);line-height:1.1;letter-spacing:-.02em;color:#fff;margin-bottom:14px}
+.lessons p{color:var(--mute);font-size:17px}
+@media (max-width:900px){.kpis li{grid-template-columns:1fr;gap:8px}.lessons{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -529,6 +542,28 @@ strong{color:#fff;font-weight:650}
         <li class="fade"><i>✓</i><div><b>A next step for every ending</b><span>Winning, losing and cancelled auctions each lead somewhere useful.</span></div></li>
         <li class="fade"><i>✓</i><div><b>Research that changed the scope</b><span>A short, evidence-based pitch turned a list of tweaks into a full redesign.</span></div></li>
       </ul>
+    </div>
+  </section>
+
+  <section class="sec" id="ch-measure" data-ch="What I'd measure">
+    <div class="split">
+      <div><p class="label"><i></i>What I'd measure</p><h2 class="h2 reveal-h">How we'll know it works</h2></div>
+      <div class="prose fade"><p>A redesign is a bet until the numbers come in. These are the measures I proposed to the business team, so every release can be judged against the same three questions.</p></div>
+    </div>
+    <ul class="kpis">
+      <li class="fade"><b>Participation rate</b><span>Do more visitors who open an auction go on to join it?</span><em>Visitors who join ÷ visitors who view the auction</em></li>
+      <li class="fade"><b>Time to first bid</b><span>Is the path from discovering an auction to placing a bid getting shorter?</span><em>From opening the auction page to the first confirmed bid</em></li>
+      <li class="fade"><b>NPS after the auction</b><span>Do people, winners and the rest, leave with a good feeling about it?</span><em>A short survey sent once the auction ends</em></li>
+    </ul>
+  </section>
+
+  <section class="sec" id="ch-learned" data-ch="What I learned">
+    <p class="label"><i></i>What I learned</p>
+    <h2 class="h2 reveal-h" style="max-width:16ch">Three things I'll take to the next project</h2>
+    <div class="lessons">
+      <div class="fade"><h3>Design the endings first</h3><p>Winning is the easy screen. Losing, a cancelled auction and a deposit refund are where trust is won or lost, so they got the same care as the bidding board.</p></div>
+      <div class="fade"><h3>Benchmark for patterns, not looks</h3><p>Specialist auction platforms didn't give me a style to copy. They showed me what bidders expect to see first: the status and the time left.</p></div>
+      <div class="fade"><h3>A message is part of the interface</h3><p>An outbid alert that arrives on time does more than any layout. I designed the notifications alongside the screens, not after them.</p></div>
     </div>
   </section>
 
