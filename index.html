@@ -888,7 +888,7 @@ img{display:block;max-width:100%}
   /* ---------- Ruler tape: dark tape, centre guide, redlines and a gliding selection ---------- */
   (() => {
     const tape = $('#rtape'); if (!tape) return;
-    const list = ['User research','Information architecture','User flows','Wireframing','Prototyping','Design systems','Usability testing','Accessibility','Design QA','Handoff'];
+    const list = ['User research','Information architecture','User flows','Wireframing','Prototyping','Design systems','Usability testing','Accessibility','Design Audit','Handoff'];
     tape.innerHTML = '<div class="rt-ruler"><div class="rt-ticks"></div><div class="rt-hl"></div></div><div class="rt-row"></div><div class="rt-guide"></div><div class="rt-gap"><span></span></div><div class="rt-gap"><span></span></div><div class="rt-sel"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="nm"></span><span class="sz"></span></div><div class="rt-cur"><svg viewBox="0 0 24 24"><path d="M4 2l16 9.5-7 1.6-3.4 6.9z" fill="#FFE14D" stroke="#120B2E" stroke-width="1.5" stroke-linejoin="round"/></svg><span>Refaat</span></div>';
     const ticks = tape.querySelector('.rt-ticks'), row = tape.querySelector('.rt-row'), hl = tape.querySelector('.rt-hl'), sel = tape.querySelector('.rt-sel'), cur = tape.querySelector('.rt-cur');
     const [gl, gr] = tape.querySelectorAll('.rt-gap'), nm = sel.querySelector('.nm'), sz = sel.querySelector('.sz');
