@@ -901,7 +901,7 @@ img{display:block;max-width:100%}
     let M = [], W = 0, TW = 0;
     const measure = () => { M = bs.map(b => ({ l: b.offsetLeft, t: b.offsetTop, w: b.offsetWidth, h: b.offsetHeight, il: b.parentNode.offsetLeft, iw: b.parentNode.offsetWidth, n: b.textContent })); W = row.scrollWidth / 3; TW = tape.offsetWidth; };
     measure(); addEventListener('resize', measure); if (document.fonts) document.fonts.ready.then(measure);
-    let x = 0, v = -3.2, dragging = false, lx = 0, tv = 0, lastY = scrollY, hi = -1, onSec = false;
+    let x = 0, v = -2.3, dragging = false, lx = 0, tv = 0, lastY = scrollY, hi = -1, onSec = false;
     const S = { x: 0, y: 0, w: 0, h: 0, init: false };
     tape.addEventListener('pointerdown', e => { dragging = true; lx = e.clientX; tv = 0; tape.classList.add('drag'); tape.setPointerCapture(e.pointerId); });
     tape.addEventListener('pointermove', e => { if (!dragging) return; const d = e.clientX - lx; lx = e.clientX; x += d; tv = d; });
@@ -926,7 +926,7 @@ img{display:block;max-width:100%}
       requestAnimationFrame(frame);
       if (!heroVisible || document.hidden || !W) return;
       const dy = Math.abs(scrollY - lastY); lastY = scrollY;
-      if (!dragging && !reduce) { v = lerp(v, -3.2 - Math.min(dy * .15, 6), .06); x += v; }
+      if (!dragging && !reduce) { v = lerp(v, -2.3 - Math.min(dy * .1, 3), .06); x += v; }
       if (x <= -W) x += W; if (x > 0) x -= W;
       row.style.transform = `translate3d(${x}px,0,0)`;
       ticks.style.transform = `translate3d(${((x % 1000) + 1000) % 1000 - 1000}px,0,0)`;
