@@ -316,7 +316,7 @@ strong{color:#fff;font-weight:650}
 .chap-list a.on{color:var(--night);font-weight:650}
 .chap-list a.on span{color:var(--violet)}
 .chap-list a.done span{color:var(--night)}
-@media (max-width:760px){.chap{left:16px;bottom:16px}.chap-of{display:none}.chap-btn{height:46px;font-size:14px}.chap-n{width:32px;height:32px}}
+@media (max-width:760px){.chap-of{display:none}.chap{left:50%;bottom:calc(14px + env(safe-area-inset-bottom));transform:translate(-50%,16px)}.chap.show{transform:translate(-50%,0)}.chap.tuck:not(.open){transform:translate(-50%,90px);opacity:0;pointer-events:none}.chap-btn{height:46px;font-size:14px;padding:0 16px 0 6px}.chap-n{width:34px;height:34px}.chap-list{left:50%;transform:translate(-50%,10px) scale(.98);transform-origin:bottom center;max-height:62vh;overflow:auto;min-width:min(86vw,300px)}.chap.open .chap-list{transform:translate(-50%,0)}.chap-list a{padding:12px}}
 @media (prefers-reduced-motion:reduce){.chap,.chap-list{transition:none}}
 
 /* ---------- KPIs and lessons ---------- */
@@ -693,7 +693,12 @@ strong{color:#fff;font-weight:650}
       const p = Math.max(0, Math.min(1, (mid - r.top) / Math.max(1, nxt - r.top)));
       $('#chapBar').style.transform = `scaleX(${p})`;
     };
-    let raf = 0; const onS = () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; update(); }); };
+    let raf = 0, lastSY = scrollY;
+    const onS = () => {
+      const dy = scrollY - lastSY; lastSY = scrollY;
+      if (innerWidth <= 760 && Math.abs(dy) > 4) chap.classList.toggle('tuck', dy > 0 && scrollY > 200);
+      if (!raf) raf = requestAnimationFrame(() => { raf = 0; update(); });
+    };
     addEventListener('scroll', onS, { passive: true }); addEventListener('resize', onS); update();
     btn.addEventListener('click', () => setOpen(!chap.classList.contains('open')));
     chap.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') { clearTimeout(closeT); setOpen(true); } });

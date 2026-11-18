@@ -379,20 +379,20 @@ img{display:block;max-width:100%}
 
 @media (max-width:860px){
   .hero-grid{grid-template-columns:minmax(0,1fr);gap:8px;min-height:0;padding-top:4px}
-  .stage{order:-1;width:min(92vw,460px)}
-  .copy{margin-top:34px}
+  .stage{order:0;width:min(84vw,420px);margin-top:28px}
+  .copy{margin-top:clamp(28px,7vh,64px)}
   .bar nav a:not(.talk){display:none}
   .menu-btn{display:inline-flex}
   .bar nav .talk,.bar nav .cv-top{display:none}
   .headline{font-size:clamp(40px,12vw,72px);white-space:normal}
   .pointer{display:none}
   .chip-swatch{display:none}
-  .chip-check{left:56%;top:0}
-  .check{width:172px;padding:11px 11px 8px}
+  .chip-check{left:42%;top:-2%}
+  .check{width:min(46vw,176px);padding:11px 11px 8px}
   .chk{font-size:12.5px;padding:4px 2px}
-  .chip-toggle{left:-2%;top:12%}
+  .chip-toggle{left:-3%;top:74%}
   .coin-label{bottom:-2%}
-  .chip-note{left:70%;top:84%}
+  .chip-note{display:none}
   .note{width:118px;font-size:13px;padding:10px 10px 12px}
   .ring text{font-size:15.5px}
   .bands{margin-top:56px}
@@ -400,6 +400,14 @@ img{display:block;max-width:100%}
   .rt-it{padding:20px 36px 0}
   .rt-it b{font-size:28px}
   .follower{display:none}
+  .work{padding:96px var(--pad) 96px}
+  .work-head{margin-bottom:40px}
+  .work-list{gap:88px}
+  .about{padding:96px var(--pad) 88px}
+  .bring{margin-top:120px}
+  .bring-list{gap:56px;padding:8px 0 24px}
+  /* keeps the floating Menu pill readable over content once you scroll */
+  html.scrolled body::before{content:"";position:fixed;inset:0 0 auto 0;height:92px;z-index:54;pointer-events:none;background:linear-gradient(180deg,rgba(18,11,46,.94) 0%,rgba(18,11,46,.75) 55%,rgba(18,11,46,0) 100%)}
 }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
@@ -921,7 +929,8 @@ img{display:block;max-width:100%}
       ride: v => { forced = v; sync(); },
       visible: () => { const r = tape.getBoundingClientRect(); return r.top > 0 && r.bottom < innerHeight + 4; }
     };
-    addEventListener('scroll', checkSec, { passive: true }); addEventListener('resize', checkSec); checkSec();
+    addEventListener('scroll', checkSec, { passive: true });
+    const setScrolled = () => document.documentElement.classList.toggle('scrolled', scrollY > 60); addEventListener('scroll', setScrolled, { passive: true }); setScrolled(); addEventListener('resize', checkSec); checkSec();
     // Speed in px per second so it feels the same on 60 Hz and 120 Hz screens
     const SPEED = 70; let lastT = performance.now();
     const frame = (now = performance.now()) => {
